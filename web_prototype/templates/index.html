@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AegisPay-AI | Mastercard Cyber & AI Defense Lab</title>
+  
+  <!-- Tailwind CSS & Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome, Chart.js & Vis.js -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            mc: {
+              red: '#EB001B',
+              orange: '#FF5F00',
+              yellow: '#F79E1B',
+              dark: '#080C14',
+              card: '#0F172A',
+              cardHover: '#1E293B',
+              border: '#334155',
+              cyber: '#00E5FF',
+              purple: '#A855F7',
+              emerald: '#10B981'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #06090F;
+      color: #F1F5F9;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(235, 0, 27, 0.12) 0px, transparent 45%),
+        radial-gradient(at 100% 0%, rgba(255, 95, 0, 0.10) 0px, transparent 45%),
+        radial-gradient(at 50% 100%, rgba(0, 229, 255, 0.08) 0px, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .glow-red {
+      box-shadow: 0 0 25px rgba(235, 0, 27, 0.5);
+    }
+    .glow-orange {
+      box-shadow: 0 0 25px rgba(255, 95, 0, 0.4);
+    }
+    .glow-cyan {
+      box-shadow: 0 0 25px rgba(0, 229, 255, 0.4);
+    }
+    .glow-emerald {
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.4);
+    }
+    .glow-purple {
+      box-shadow: 0 0 25px rgba(168, 85, 247, 0.4);
+    }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0B0F19;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+
+    /* Radar Sweep Animation */
+    @keyframes radarSweep {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .radar-sweep-line {
+      animation: radarSweep 4s linear infinite;
+      transform-origin: 150px 150px;
+    }
+
+    /* Active Nav Tab */
+    .tab-active {
+      color: #FF5F00 !important;
+      border-color: #FF5F00 !important;
+      background: linear-gradient(180deg, rgba(255, 95, 0, 0.12) 0%, rgba(255, 95, 0, 0) 100%);
+    }
+
+    /* Agent vs Agent Data Flow Animation */
+    @keyframes pulseDataFlow {
+      0% { transform: translateX(0); opacity: 0.2; }
+      50% { opacity: 1; }
+      100% { transform: translateX(100%); opacity: 0.2; }
+    }
+    .agent-stream-beam {
+      animation: pulseDataFlow 2s linear infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-mc-orange selection:text-white text-slate-100 relative">
+
+  <!-- ================================================================= -->
+  <!-- TOP BRANDING & TELEMETRY HEADER -->
+  <!-- ================================================================= -->
+  <header class="border-b border-mc-border bg-slate-900/90 backdrop-blur-xl sticky top-0 z-50 px-6 py-3 flex flex-wrap items-center justify-between gap-4">
+    <!-- Brand Logo & Challenge Badge -->
+    <div class="flex items-center space-x-4">
+      <div class="flex items-center -space-x-2.5">
+        <div class="w-8 h-8 rounded-full bg-mc-red shadow-lg shadow-mc-red/50 flex items-center justify-center font-bold text-white text-xs">M</div>
+        <div class="w-8 h-8 rounded-full bg-mc-orange shadow-lg shadow-mc-orange/50"></div>
+      </div>
+      <div>
+        <div class="flex items-center space-x-2">
+          <h1 class="font-extrabold text-white text-lg tracking-tight font-sans">AegisPay<span class="text-mc-orange font-mono">.AI</span></h1>
+          <span class="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider bg-mc-red/20 text-mc-red border border-mc-red/40">Cyber Defense Lab</span>
+        </div>
+        <p class="text-[11px] text-slate-300 font-medium">Mastercard Innovation Challenge 2026 @ Global Fintech Fest (GFF), Mumbai</p>
+      </div>
+    </div>
+
+    <!-- Live Telemetry Status Ticker + Walkthrough Guide Button -->
+    <div class="flex items-center space-x-3 text-xs font-mono">
+      <div class="flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="text-slate-300">P99 Latency: <strong class="text-emerald-400 font-bold" id="top-p99-latency">11.23 ms</strong></span>
+      </div>
+      <div class="hidden sm:flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">
+        <i class="fa-solid fa-shield-halved text-cyan-400"></i>
+        <span class="text-slate-300">SLA: <strong class="text-cyan-400 font-bold">&lt; 50 ms</strong></span>
+      </div>
+      
+      <!-- Interactive Guide Modal Trigger -->
+      <button onclick="toggleUsageGuide()" class="px-3 py-1.5 bg-gradient-to-r from-amber-500 to-mc-orange hover:opacity-90 text-white font-bold rounded-lg transition shadow flex items-center space-x-1.5">
+        <i class="fa-solid fa-book-open-reader"></i>
+        <span>Judge Walkthrough Guide</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ================================================================= -->
+  <!-- NAVIGATION TABS BAR -->
+  <!-- ================================================================= -->
+  <nav class="bg-slate-900/60 border-b border-mc-border px-6 flex space-x-1 overflow-x-auto text-xs font-semibold py-1.5 sticky top-[57px] z-40 backdrop-blur-lg">
+    <button onclick="switchTab('dashboard')" id="tab-dashboard" class="tab-btn py-2 px-3 rounded-lg text-slate-300 hover:text-white border-b-2 border-transparent flex items-center space-x-2 tab-active transition">
+      <i class="fa-solid fa-gauge-high text-mc-orange"></i><span>Command Center</span>
+    </button>
+    <button onclick="switchTab('taxonomy')" id="tab-taxonomy" class="tab-btn py-2 px-3 rounded-lg text-slate-300 hover:text-white border-b-2 border-transparent flex items-center space-x-2 transition">
+      <i class="fa-solid fa-shield-cat text-mc-red"></i><span>24-Vector Threat Matrix</span>
+    </button>
+    <button onclick="switchTab('agentic')" id="tab-agentic" class="tab-btn py-2 px-3 rounded-lg text-slate-300 hover:text-white border-b-2 border-transparent flex items-center space-x-2 transition">
+      <i class="fa-solid fa-brain text-purple-400"></i><span>Agentic Commerce Shield (MCP)</span>
+    </button>
+    <button onclick="switchTab('discovery')" id="tab-discovery" class="tab-btn py-2 px-3 rounded-lg text-slate-300 hover:text-white border-b-2 border-transparent flex items-center space-x-2 transition">
+      <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i><span>Active Threat Discovery</span>
+    </button>
+    <button onclick="switchTab('rl_attacker')" id="tab-rl_attacker" class="tab-btn py-2 px-3 rounded-lg text-slate-300 hover:text-white border-b-2 border-transparent flex items-center space-x-2 transition">
+      <i class="fa-solid fa-robot text-mc-yellow"></i><span>RL Red Team Attacker</span>
+    </button>
+    <button onclick="switchTab('graph')" id="tab-graph" class="tab-btn py-2 px-3 rounded-lg text-slate-300 hover:text-white border-b-2 border-transparent flex items-center space-x-2 transition">
+      <i class="fa-solid fa-circle-nodes text-cyan-400"></i><span>Live Fraud Graph</span>
+    </button>
+    <button onclick="switchTab('blueteam')" id="tab-blueteam" class="tab-btn py-2 px-3 rounded-lg text-slate-300 hover:text-white border-b-2 border-transparent flex items-center space-x-2 transition">
+      <i class="fa-solid fa-shield-virus text-emerald-400"></i><span>Blue Team Inspection</span>
+    </button>
+    <button onclick="switchTab('coevolution')" id="tab-coevolution" class="tab-btn py-2 px-3 rounded-lg text-slate-300 hover:text-white border-b-2 border-transparent flex items-center space-x-2 transition">
+      <i class="fa-solid fa-dna text-indigo-400"></i><span>Closed-Loop Arena</span>
+    </button>
+    <button onclick="switchTab('intel_audit')" id="tab-intel_audit" class="tab-btn py-2 px-3 rounded-lg text-slate-300 hover:text-white border-b-2 border-transparent flex items-center space-x-2 transition">
+      <i class="fa-solid fa-microchip text-teal-400"></i><span>Threat Intel & Self-Audit</span>
+    </button>
+    <button onclick="switchTab('sar')" id="tab-sar" class="tab-btn py-2 px-3 rounded-lg text-slate-300 hover:text-white border-b-2 border-transparent flex items-center space-x-2 transition">
+      <i class="fa-solid fa-file-invoice-dollar text-amber-500"></i><span>SAR & Compliance</span>
+    </button>
+  </nav>
+
+  <!-- ================================================================= -->
+  <!-- JUDGE & USER WALKTHROUGH GUIDE MODAL -->
+  <!-- ================================================================= -->
+  <div id="usage-guide-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="glass-panel w-full max-w-4xl max-h-[90vh] rounded-2xl p-6 overflow-y-auto space-y-5 border border-mc-orange/40 glow-orange">
+      <div class="flex justify-between items-center border-b border-mc-border pb-3">
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 rounded-xl bg-mc-orange/20 border border-mc-orange flex items-center justify-center text-mc-orange font-bold">
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-white text-lg">Judge & Evaluator Interactive Walkthrough Guide</h3>
+            <p class="text-xs text-slate-300">3-Minute Step-by-Step Flow to evaluate Project AegisPay-AI</p>
+          </div>
+        </div>
+        <button onclick="toggleUsageGuide()" class="text-slate-400 hover:text-white text-lg p-2 rounded-lg hover:bg-slate-800">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Steps Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+          <span class="px-2 py-0.5 rounded bg-mc-orange text-black font-bold font-mono">STEP 1</span>
+          <h5 class="font-bold text-white text-sm">Command Center & Sandbox</h5>
+          <p class="text-slate-300">Select <strong>ADV-09 (Agentic MCP)</strong> or <strong>ADV-05 (Biometric Deepfake)</strong> and click <strong>"Inject GenAI Attack Vector"</strong>. Observe the 4-level risk waterfall scores, sub-10ms latency, and <strong>TreeSHAP feature attributions</strong> in real time.</p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+          <span class="px-2 py-0.5 rounded bg-purple-500 text-white font-bold font-mono">STEP 2</span>
+          <h5 class="font-bold text-white text-sm">Agentic Commerce Shield (MCP)</h5>
+          <p class="text-slate-300">Switch to the <strong>Agentic Commerce</strong> tab and click <strong>"Simulate Agentic Flow"</strong>. See how autonomous AI procurement bots parse product metadata, encounter delimiter overrides (<code class="text-amber-400">&lt;|im_start|&gt;</code>), and get intercepted by AegisPay-AI in &lt;18ms.</p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+          <span class="px-2 py-0.5 rounded bg-cyan-400 text-black font-bold font-mono">STEP 3</span>
+          <h5 class="font-bold text-white text-sm">Live Fraud Graph & Smurfing DAG</h5>
+          <p class="text-slate-300">Open the <strong>Live Fraud Graph</strong> tab and click <strong>"Simulate Smurfing Swarm"</strong>. Watch the dynamic Vis.js graph render mule accounts, volume fragmentation, and instant intercepts before off-ramp conversion.</p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+          <span class="px-2 py-0.5 rounded bg-mc-red text-white font-bold font-mono">STEP 4</span>
+          <h5 class="font-bold text-white text-sm">RL Red Team Policy Convergence</h5>
+          <p class="text-slate-300">Open the <strong>RL Red Team</strong> tab and click <strong>"Train RL Agent"</strong>. Watch the 3-state Q-table matrix update live with real Q-values computed across 30 training episodes against the live Blue Team.</p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+          <span class="px-2 py-0.5 rounded bg-emerald-400 text-black font-bold font-mono">STEP 5</span>
+          <h5 class="font-bold text-white text-sm">Closed-Loop Arena Co-Evolution</h5>
+          <p class="text-slate-300">Open the <strong>Closed-Loop Arena</strong> tab and click <strong>"Trigger Co-Evolution Run"</strong>. Observe the Chart.js curves prove mutual learning as adversarial evasion rate drops across 4 generations.</p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+          <span class="px-2 py-0.5 rounded bg-amber-400 text-black font-bold font-mono">STEP 6</span>
+          <h5 class="font-bold text-white text-sm">SAR & Forensic Compliance Export</h5>
+          <p class="text-slate-300">Open the <strong>SAR & Compliance</strong> tab to generate an official Suspicious Activity Report (SAR) narrative formatted for compliance analyst triage with forensic telemetry evidence.</p>
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-2 border-t border-slate-800">
+        <button onclick="toggleUsageGuide()" class="px-5 py-2 bg-mc-orange text-white font-bold rounded-lg text-xs hover:opacity-90 transition">
+          Got it! Start Interactive Demo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- MAIN APPLICATION CONTAINER -->
+  <!-- ================================================================= -->
+  <main class="flex-1 p-6 max-w-[1680px] w-full mx-auto space-y-6">
+
+    <!-- ============================================================= -->
+    <!-- TAB 1: COMMAND CENTER -->
+    <!-- ============================================================= -->
+    <section id="section-dashboard" class="space-y-6">
+      
+      <!-- Measured Top Metrics Ribbon -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div class="glass-panel p-4 rounded-xl border-l-4 border-l-mc-red">
+          <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Measured ROC-AUC</p>
+          <div class="flex items-baseline space-x-2 mt-1">
+            <h3 class="text-2xl font-extrabold text-white font-mono" id="kpi-roc-auc">0.9744</h3>
+            <span class="text-xs text-emerald-400 font-semibold font-mono">Target &gt; 0.95</span>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1">Evaluated on 1,500 Test Txs</p>
+        </div>
+
+        <div class="glass-panel p-4 rounded-xl border-l-4 border-l-mc-orange">
+          <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Fraud Recall Rate</p>
+          <div class="flex items-baseline space-x-2 mt-1">
+            <h3 class="text-2xl font-extrabold text-mc-orange font-mono" id="kpi-recall">94.00%</h3>
+            <span class="text-xs text-emerald-400 font-semibold font-mono">282 / 300 Caught</span>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1">Across 24 Attack Vectors</p>
+        </div>
+
+        <div class="glass-panel p-4 rounded-xl border-l-4 border-l-cyan-400">
+          <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Mean Pipeline Latency</p>
+          <div class="flex items-baseline space-x-2 mt-1">
+            <h3 class="text-2xl font-extrabold text-cyan-400 font-mono" id="kpi-mean-lat">6.02 <span class="text-sm font-normal text-slate-400">ms</span></h3>
+            <span class="text-xs text-emerald-400 font-semibold font-mono">P99: 11.23 ms</span>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1">77% Buffer under 50ms SLA</p>
+        </div>
+
+        <div class="glass-panel p-4 rounded-xl border-l-4 border-l-emerald-500">
+          <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">False Positive Rate</p>
+          <div class="flex items-baseline space-x-2 mt-1">
+            <h3 class="text-2xl font-extrabold text-emerald-400 font-mono" id="kpi-fpr">3.42%</h3>
+            <span class="text-xs text-slate-300 font-mono">41 / 1,200 Alarms</span>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1">Protects Genuine Revenue</p>
+        </div>
+
+        <div class="glass-panel p-4 rounded-xl border-l-4 border-l-purple-500">
+          <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Statistical Fidelity</p>
+          <div class="flex items-baseline space-x-2 mt-1">
+            <h3 class="text-2xl font-extrabold text-purple-400 font-mono" id="kpi-w-dist">W₁ = 0.096</h3>
+            <span class="text-xs text-emerald-400 font-semibold font-mono">KS p=0.968</span>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1">Authentic Distribution Fit</p>
+        </div>
+      </div>
+
+      <!-- ============================================================= -->
+      <!-- NEW VISUAL: RED TEAM VS BLUE TEAM AGENTS IN ACTION (DUEL HUD) -->
+      <!-- ============================================================= -->
+      <div class="glass-panel p-5 rounded-2xl space-y-4 border border-mc-orange/30">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-mc-border pb-3">
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-lg bg-mc-orange/20 border border-mc-orange flex items-center justify-center text-mc-orange font-bold">
+              <i class="fa-solid fa-swords"></i>
+            </div>
+            <div>
+              <h4 class="font-extrabold text-white text-base">Adversarial Arena: Red Team vs Blue Team Agents in Action</h4>
+              <p class="text-xs text-slate-300">Live visualization of Q-learning mutation synthesis versus multi-modal online adaptive defense</p>
+            </div>
+          </div>
+          <button onclick="triggerLiveAgentDuel()" class="px-4 py-2 bg-gradient-to-r from-mc-red via-mc-orange to-emerald-500 text-white font-bold rounded-lg text-xs shadow-lg hover:opacity-90 transition flex items-center space-x-2">
+            <i class="fa-solid fa-play"></i>
+            <span>Execute 1-Step Co-Evolution Duel</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center font-mono text-xs">
+          <!-- Left: Red Team Attacker Agent Card -->
+          <div class="lg:col-span-5 p-4 rounded-xl bg-slate-950 border border-mc-red/50 space-y-2 relative overflow-hidden">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-mc-red text-sm flex items-center space-x-1.5">
+                <i class="fa-solid fa-robot"></i>
+                <span>RED TEAM ATTACKER (AI Agent)</span>
+              </span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-mc-red/20 text-mc-red border border-mc-red/40" id="duel-red-status">POLICY_ACTIVE</span>
+            </div>
+            <div class="space-y-1 text-[11px] text-slate-300">
+              <div>Current State: <strong class="text-white" id="duel-red-state">STATE 2 (Hardened Defense)</strong></div>
+              <div>Selected Action: <strong class="text-mc-orange" id="duel-red-action">Action 3: Delimiter Masking + Spline Jitter</strong></div>
+              <div>Exploration Rate (&epsilon;): <strong class="text-cyan-400" id="duel-red-epsilon">0.05</strong> | Q-Value: <strong class="text-emerald-400" id="duel-red-qval">+2.41</strong></div>
+            </div>
+          </div>
+
+          <!-- Center: Animated Bi-Directional Attack / Defense Data Stream -->
+          <div class="lg:col-span-2 flex flex-col items-center justify-center space-y-1 text-center py-2">
+            <span class="text-[10px] text-mc-orange font-bold uppercase tracking-wider">Mutation Payload</span>
+            <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden relative border border-slate-800">
+              <div class="w-1/3 h-full bg-gradient-to-r from-mc-red via-mc-orange to-cyan-400 rounded-full agent-stream-beam"></div>
+            </div>
+            <span class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider" id="duel-intercept-label">Multi-Modal Scan</span>
+          </div>
+
+          <!-- Right: Blue Team Defender Agent Card -->
+          <div class="lg:col-span-5 p-4 rounded-xl bg-slate-950 border border-emerald-500/50 space-y-2 relative overflow-hidden">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-emerald-400 text-sm flex items-center space-x-1.5">
+                <i class="fa-solid fa-shield-virus"></i>
+                <span>BLUE TEAM DEFENDER (Adaptive AI)</span>
+              </span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40" id="duel-blue-status">ONLINE_SGD</span>
+            </div>
+            <div class="space-y-1 text-[11px] text-slate-300">
+              <div>Ensemble Latency: <strong class="text-cyan-400" id="duel-blue-lat">6.02 ms (SLA &lt; 50ms)</strong></div>
+              <div>Decision Policy: <strong class="text-mc-red" id="duel-blue-action">HARD_DECLINE (Score: 0.94)</strong></div>
+              <div>Memory Buffer: <strong class="text-purple-400" id="duel-blue-mem">80 Hard Samples</strong> | Cost Thresh: <strong class="text-amber-400">&tau; = 0.65</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="duel-log-box" class="p-2.5 bg-slate-950 rounded-lg border border-slate-800 text-xs font-mono text-slate-300 flex items-center space-x-2">
+          <i class="fa-solid fa-terminal text-mc-orange"></i>
+          <span id="duel-log-text">Click 'Execute 1-Step Co-Evolution Duel' to trigger real-time Red/Blue agent learning interaction.</span>
+        </div>
+      </div>
+
+      <!-- Center Grid: Live Threat Radar + High-Visibility Sandbox -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left: Interactive Live Threat Radar Canvas -->
+        <div class="lg:col-span-5 glass-panel p-5 rounded-2xl flex flex-col justify-between space-y-4">
+          <div class="flex justify-between items-center border-b border-mc-border pb-3">
+            <div>
+              <h4 class="font-bold text-white text-sm flex items-center space-x-2">
+                <i class="fa-solid fa-radar text-mc-orange animate-spin"></i>
+                <span>Live 2026 Payment Threat Radar</span>
+              </h4>
+              <p class="text-[11px] text-slate-400">Autonomous scan across Cards, UPI, ISO 20022 & Agentic Commerce</p>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 animate-pulse">ACTIVE RADAR</span>
+          </div>
+
+          <!-- Radar SVG Display -->
+          <div class="relative w-full aspect-square max-h-[320px] mx-auto flex items-center justify-center">
+            <svg viewBox="0 0 300 300" class="w-full h-full">
+              <!-- Radar Circles -->
+              <circle cx="150" cy="150" r="140" fill="none" stroke="#334155" stroke-width="1.5" />
+              <circle cx="150" cy="150" r="100" fill="none" stroke="#334155" stroke-width="1.5" />
+              <circle cx="150" cy="150" r="60" fill="none" stroke="#334155" stroke-width="1.5" />
+              <circle cx="150" cy="150" r="20" fill="none" stroke="#475569" stroke-width="1.5" />
+              
+              <!-- Crosshairs -->
+              <line x1="10" y1="150" x2="290" y2="150" stroke="#334155" stroke-width="1.5" stroke-dasharray="4" />
+              <line x1="150" y1="10" x2="150" y2="290" stroke="#334155" stroke-width="1.5" stroke-dasharray="4" />
+              
+              <!-- Sweep Line -->
+              <g class="radar-sweep-line">
+                <line x1="150" y1="150" x2="290" y2="150" stroke="url(#sweep-grad)" stroke-width="2.5" />
+                <path d="M 150 150 L 290 150 A 140 140 0 0 0 250 50 Z" fill="url(#sweep-fill)" opacity="0.25" />
+              </g>
+
+              <!-- Threat Blips -->
+              <circle cx="190" cy="90" r="6" fill="#EB001B" class="animate-ping" opacity="0.75" />
+              <circle cx="190" cy="90" r="4" fill="#EB001B" />
+              <text x="200" y="93" fill="#FF8080" font-size="10" font-family="monospace" font-weight="bold">ADV-09 (Agentic MCP)</text>
+
+              <circle cx="100" cy="80" r="5" fill="#FF5F00" />
+              <text x="35" y="75" fill="#FF9955" font-size="10" font-family="monospace" font-weight="bold">ADV-05 (Diffusion 3DS)</text>
+
+              <circle cx="210" cy="200" r="5" fill="#F79E1B" />
+              <text x="220" y="205" fill="#FFD080" font-size="10" font-family="monospace" font-weight="bold">ADV-13 (Smurfing DAG)</text>
+
+              <circle cx="80" cy="210" r="4" fill="#00E5FF" />
+              <text x="15" y="225" fill="#80F2FF" font-size="10" font-family="monospace" font-weight="bold">ADV-14 (ISO 20022)</text>
+
+              <defs>
+                <linearGradient id="sweep-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="rgba(255,95,0,0)" />
+                  <stop offset="100%" stop-color="#FF5F00" />
+                </linearGradient>
+                <radialGradient id="sweep-fill" cx="150" cy="150" r="140" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="rgba(255,95,0,0)" />
+                  <stop offset="100%" stop-color="rgba(255,95,0,0.4)" />
+                </radialGradient>
+              </defs>
+            </svg>
+          </div>
+
+          <div class="grid grid-cols-4 gap-2 text-center text-xs font-mono">
+            <div class="p-2 rounded bg-slate-900 border border-slate-800">
+              <span class="text-mc-red font-bold block">CRITICAL</span> 8 Vectors
+            </div>
+            <div class="p-2 rounded bg-slate-900 border border-slate-800">
+              <span class="text-mc-orange font-bold block">HIGH</span> 10 Vectors
+            </div>
+            <div class="p-2 rounded bg-slate-900 border border-slate-800">
+              <span class="text-amber-400 font-bold block">MEDIUM</span> 6 Vectors
+            </div>
+            <div class="p-2 rounded bg-slate-900 border border-slate-800">
+              <span class="text-emerald-400 font-bold block">DEFENDED</span> 94.0%
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Live Interactive Attack & Defense Sandbox -->
+        <div class="lg:col-span-7 glass-panel p-5 rounded-2xl flex flex-col justify-between space-y-4">
+          <div class="flex justify-between items-center border-b border-mc-border pb-3">
+            <div>
+              <h4 class="font-bold text-white text-base">Real-Time Transaction Probing & Inspection Sandbox</h4>
+              <p class="text-xs text-slate-300">Generate synthetic transaction vectors and observe sub-30ms multi-modal defense decisions</p>
+            </div>
+            <span class="px-2.5 py-1 rounded bg-mc-red/20 text-mc-red text-xs font-bold border border-mc-red/40">RED vs BLUE ARENA</span>
+          </div>
+
+          <!-- Controls Form -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            <div>
+              <label class="block text-slate-300 font-semibold mb-1">Select Attack Vector</label>
+              <select id="sim-vector-select" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white font-mono focus:outline-none focus:border-mc-orange">
+                <option value="ADV-01">ADV-01: Synthetic Identity Seasoning (SISS)</option>
+                <option value="ADV-05">ADV-05: Multimodal Biometric Deepfake Injection</option>
+                <option value="ADV-06">ADV-06: Behavioral Telemetry GAN Mimicry</option>
+                <option value="ADV-09" selected>ADV-09: Indirect Prompt Injection (Agentic MCP)</option>
+                <option value="ADV-10">ADV-10: Autonomous Tool Privilege Escalation</option>
+                <option value="ADV-13">ADV-13: Autonomous Multi-Rail Smurfing Swarm</option>
+                <option value="ADV-14">ADV-14: ISO 20022 Rich Remittance Payload Exploit</option>
+                <option value="ADV-17">ADV-17: Adversarial Black-Box Boundary Probing</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-slate-300 font-semibold mb-1">Target Payment Rail</label>
+              <select id="sim-rail-select" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white font-mono focus:outline-none focus:border-mc-orange">
+                <option value="Cards / 3DS (Mastercard Identity Check)">Cards / 3DS</option>
+                <option value="UPI Instant Payment Rails">UPI Instant</option>
+                <option value="FedNow / Instant Rails">FedNow Instant</option>
+                <option value="ISO 20022 Interbank Clearing">ISO 20022</option>
+                <option value="Autonomous Agent-to-Agent Commerce" selected>Agentic Commerce (MCP)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-slate-300 font-semibold mb-1">Evasion Stealth Level (<span id="stealth-val" class="text-mc-orange font-bold font-mono">0.75</span>)</label>
+              <input type="range" id="sim-stealth" min="0.1" max="0.99" step="0.05" value="0.75" 
+                     oninput="document.getElementById('stealth-val').innerText = this.value"
+                     class="w-full mt-2 accent-mc-orange cursor-pointer">
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-wrap items-center gap-3">
+            <button onclick="triggerSimulation(true)" class="flex-1 py-3 px-4 bg-gradient-to-r from-mc-red to-mc-orange hover:opacity-90 text-white font-bold rounded-lg text-xs shadow-lg shadow-mc-red/30 transition flex items-center justify-center space-x-2">
+              <i class="fa-solid fa-skull-crossbones"></i>
+              <span>Inject GenAI Attack Vector</span>
+            </button>
+            <button onclick="triggerSimulation(false)" class="py-3 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-lg text-xs border border-slate-700 transition flex items-center space-x-2">
+              <i class="fa-solid fa-user-check text-emerald-400"></i>
+              <span>Inject Legitimate Cardholder Tx</span>
+            </button>
+          </div>
+
+          <!-- Live Output Inspection Card -->
+          <div id="live-inspection-card" class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3 font-mono text-xs">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+              <div class="flex items-center space-x-2">
+                <span class="text-slate-400">Transaction ID:</span>
+                <strong class="text-white text-sm" id="res-tx-id">TX_READY_AWAITING_INPUT</strong>
+              </div>
+              <span id="live-action-badge" class="px-3.5 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-400">AWAITING_PROBE</span>
+            </div>
+
+            <!-- Risk Scores Waterfall -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
+              <div class="p-2.5 rounded bg-slate-900 border border-slate-800">
+                <span class="text-slate-400 block text-[10px]">Level 1 (Tabular)</span>
+                <strong class="text-amber-400 text-sm" id="score-tab">--</strong>
+              </div>
+              <div class="p-2.5 rounded bg-slate-900 border border-slate-800">
+                <span class="text-slate-400 block text-[10px]">Level 2 (Biometrics)</span>
+                <strong class="text-purple-400 text-sm" id="score-bio">--</strong>
+              </div>
+              <div class="p-2.5 rounded bg-slate-900 border border-slate-800">
+                <span class="text-slate-400 block text-[10px]">Level 3 (GNN Graph)</span>
+                <strong class="text-cyan-400 text-sm" id="score-graph">--</strong>
+              </div>
+              <div class="p-2.5 rounded bg-slate-900 border border-slate-800">
+                <span class="text-slate-400 block text-[10px]">Level 4 (NLP Guard)</span>
+                <strong class="text-mc-red text-sm" id="score-nlp">--</strong>
+              </div>
+            </div>
+
+            <!-- Telemetry Details -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-slate-300 pt-1">
+              <div>Amount: <strong class="text-white text-sm" id="res-amount">$0.00 USD</strong></div>
+              <div>Pipeline Latency: <strong class="text-emerald-400 text-sm" id="res-latency">-- ms</strong></div>
+              <div>Root Cause: <strong class="text-mc-orange" id="res-driver">Awaiting Execution</strong></div>
+            </div>
+
+            <!-- TreeSHAP Feature Contributions Container -->
+            <div class="border-t border-slate-800 pt-2 space-y-1">
+              <span class="text-[10px] text-slate-400 uppercase font-bold block">Top Feature Contributions (TreeSHAP Attribution):</span>
+              <div id="shap-contributions-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-slate-300">
+                <p class="text-slate-500 italic font-sans text-xs">Run a simulation to see top feature attributions.</p>
+              </div>
+            </div>
+
+            <div class="text-[10px] text-slate-400 border-t border-slate-800 pt-2 flex justify-between">
+              <span>Adaptive Immune State: <strong class="text-cyan-400" id="res-immune">Iteration #1 | MemBuffer: 0</strong></span>
+              <span class="text-slate-400">Mastercard Decision Intelligence SLA</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- TAB 2: 24-VECTOR THREAT TAXONOMY -->
+    <!-- ============================================================= -->
+    <section id="section-taxonomy" class="hidden space-y-6">
+      <div class="glass-panel p-6 rounded-2xl space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-mc-border pb-4">
+          <div>
+            <h3 class="font-extrabold text-white text-lg tracking-tight">The 2026 GenAI Payment Threat Taxonomy (24 Vectors)</h3>
+            <p class="text-xs text-slate-300">Structured across 6 operational tiers. Clearly identifies <strong>12 Live Simulated Vectors</strong> vs <strong>12 Documented Extensions</strong>.</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs text-slate-300 font-semibold">Filter Tier:</span>
+            <select id="taxonomy-filter" onchange="filterTaxonomyCards(this.value)" class="bg-slate-950 border border-slate-700 text-white text-xs px-3 py-1.5 rounded-lg font-mono focus:outline-none">
+              <option value="ALL">All 6 Operational Tiers (24 Vectors)</option>
+              <option value="Tier 1">Tier 1: Identity & Synthetic Persona Incubation</option>
+              <option value="Tier 2">Tier 2: Biometric Deepfakes & Telemetry Spoofing</option>
+              <option value="Tier 3">Tier 3: Agentic Commerce & Autonomous Bot Exploits</option>
+              <option value="Tier 4">Tier 4: Rail-Level & Settlement Exploitation</option>
+              <option value="Tier 5">Tier 5: Adversarial Evasion & Boundary Probing</option>
+              <option value="Tier 6">Tier 6: Post-Tx Friendly Fraud & Social Swarms</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Grid of 24 Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="taxonomy-cards-container">
+          {% for vec in vectors %}
+          <div class="tax-card glass-panel p-4 rounded-xl space-y-3 border border-slate-800 hover:border-mc-orange transition flex flex-col justify-between" data-tier="{{ vec.tier }}">
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-xs font-mono font-bold text-mc-orange">{{ vec.id }}</span>
+                <div class="flex items-center space-x-1.5">
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full {% if vec.status == 'LIVE_SIMULATED' %}bg-emerald-500/20 text-emerald-400 border border-emerald-500/40{% else %}bg-slate-800 text-slate-400 border border-slate-700{% endif %}">
+                    {% if vec.status == 'LIVE_SIMULATED' %}LIVE IN CODE{% else %}DOCUMENTED{% endif %}
+                  </span>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full {% if vec.severity == 'CRITICAL' %}bg-mc-red/20 text-mc-red border border-mc-red/40{% else %}bg-amber-500/20 text-amber-400 border border-amber-500/40{% endif %}">
+                    {{ vec.severity }}
+                  </span>
+                </div>
+              </div>
+              <h5 class="font-bold text-white text-sm">{{ vec.name }}</h5>
+              <span class="text-[11px] text-cyan-400 font-mono block mt-0.5">{{ vec.mitre_id }}</span>
+              <p class="text-xs text-slate-300 mt-2 line-clamp-3">{{ vec.mechanism }}</p>
+            </div>
+            <div class="pt-3 border-t border-slate-800 text-xs space-y-2">
+              <p class="text-slate-400"><strong class="text-slate-200">Target Rails:</strong> {{ vec.rails }}</p>
+              <p class="text-emerald-400 font-semibold"><i class="fa-solid fa-shield-halved"></i> {{ vec.mitigation }}</p>
+              {% if vec.status == 'LIVE_SIMULATED' %}
+              <button onclick="testVectorInSandbox('{{ vec.id }}')" class="w-full mt-1 py-1.5 px-2 bg-slate-800 hover:bg-mc-orange text-slate-200 hover:text-white font-mono text-[11px] font-bold rounded transition flex items-center justify-center space-x-1.5">
+                <i class="fa-solid fa-play text-[10px]"></i><span>Test in Sandbox</span>
+              </button>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- TAB 3: AGENTIC COMMERCE & MCP SHIELD -->
+    <!-- ============================================================= -->
+    <section id="section-agentic" class="hidden space-y-6">
+      <div class="glass-panel p-6 rounded-2xl space-y-5">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-mc-border pb-4">
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-500/20 text-purple-400 border border-purple-500/40">Tier 3: Flagship Vector</span>
+              <h4 class="font-extrabold text-white text-lg tracking-tight">Autonomous AI Purchasing Agent (MCP) Shield</h4>
+            </div>
+            <p class="text-xs text-slate-300 mt-1">Live simulation of Model Context Protocol (MCP) tool execution, defending against Indirect Prompt Injection & Tool Privilege Escalation.</p>
+          </div>
+          <div class="flex items-center space-x-3">
+            <select id="agentic-scenario-select" class="bg-slate-950 border border-slate-700 text-white text-xs px-3 py-2 rounded-lg font-mono focus:outline-none">
+              <option value="prompt_injection">ADV-09: Indirect Prompt Injection (Catalog Hijack)</option>
+              <option value="tool_escalation">ADV-10: Autonomous Tool Privilege Escalation</option>
+              <option value="benign">Benign: Verified Corporate Agent Procurement ($12,500)</option>
+            </select>
+            <button onclick="runAgenticSimulation()" id="btn-run-agentic" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold rounded-lg text-xs transition shadow-lg flex items-center space-x-2">
+              <i class="fa-solid fa-play"></i><span>Simulate Agentic Flow</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Left: Agent Reasoning & Execution Trace -->
+          <div class="lg:col-span-7 space-y-4">
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+              <div class="flex justify-between items-center text-xs">
+                <span class="text-slate-300 font-mono">User Directive: <strong class="text-white" id="agent-user-goal">Procure 10x Enterprise Server Licenses under $15,000 budget</strong></span>
+                <span class="px-2 py-0.5 rounded bg-slate-800 text-purple-400 font-mono text-[11px] font-bold" id="agent-model-tag">MCP Agent v1.2</span>
+              </div>
+
+              <div>
+                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Raw Ingested Supplier Metadata & Injected Delimiters</label>
+                <pre id="agent-raw-context" class="mt-1 p-3 bg-slate-900 rounded-lg text-xs font-mono text-amber-300 whitespace-pre-wrap border border-slate-800 max-h-28 overflow-y-auto">Select scenario and click 'Simulate Agentic Flow'...</pre>
+              </div>
+
+              <div>
+                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Agent Multi-Step Reasoning Trace (Chain-of-Thought)</label>
+                <div id="agent-reasoning-steps" class="mt-1 space-y-1.5 p-3 bg-slate-900/80 rounded-lg text-xs font-mono text-slate-200 max-h-36 overflow-y-auto border border-slate-800">
+                  <p class="text-slate-500 italic font-sans">No active simulation trace.</p>
+                </div>
+              </div>
+
+              <div>
+                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">MCP Tool Executions</label>
+                <div id="agent-tool-calls" class="mt-1 space-y-1 text-xs font-mono">
+                  <p class="text-slate-500 italic font-sans text-[11px]">Tool calls will appear here.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: AegisPay-AI Defense Intercept & Forensics -->
+          <div class="lg:col-span-5 space-y-4">
+            <div class="glass-panel p-5 rounded-xl border border-slate-800 space-y-4">
+              <h5 class="font-bold text-white text-sm border-b border-mc-border pb-2 flex items-center justify-between">
+                <span>AegisPay-AI Agentic Guardrail</span>
+                <span id="agentic-defense-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-400">AWAITING_FLOW</span>
+              </h5>
+
+              <div class="space-y-2.5 text-xs">
+                <div class="flex justify-between p-2.5 bg-slate-950 rounded-lg border border-slate-800">
+                  <span class="text-slate-400">Semantic Guardrail Latency:</span>
+                  <span class="font-bold text-emerald-400 font-mono" id="agentic-latency">-- ms</span>
+                </div>
+                <div class="flex justify-between p-2.5 bg-slate-950 rounded-lg border border-slate-800">
+                  <span class="text-slate-400">Primary Risk Factor:</span>
+                  <span class="font-bold text-mc-red font-mono" id="agentic-risk-factor">None</span>
+                </div>
+                <div class="flex justify-between p-2.5 bg-slate-950 rounded-lg border border-slate-800">
+                  <span class="text-slate-400">MITRE ATLAS / Rail:</span>
+                  <span class="font-bold text-cyan-400 font-mono" id="agentic-rail-tag">Agentic Commerce</span>
+                </div>
+                <div class="flex justify-between p-2.5 bg-slate-950 rounded-lg border border-slate-800">
+                  <span class="text-slate-400">Payment Amount Intercepted:</span>
+                  <span class="font-bold text-white font-mono" id="agentic-amount-tag">$0.00 USD</span>
+                </div>
+              </div>
+
+              <div class="p-3 bg-slate-950 rounded-lg border border-slate-800 text-xs space-y-1">
+                <p class="text-slate-300 font-semibold"><i class="fa-solid fa-shield-halved text-purple-400"></i> Defense Action Taken:</p>
+                <p class="text-slate-400" id="agentic-action-desc">AegisPay-AI Level 4 NLP Guardrail analyzes prompt delimiter tags (`<|im_start|>system`) and verifies cryptographic agent authority before any funds transfer is authorized.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- TAB 4: ACTIVE THREAT DISCOVERY LAB -->
+    <!-- ============================================================= -->
+    <section id="section-discovery" class="hidden space-y-6">
+      <div class="glass-panel p-6 rounded-2xl space-y-5">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-mc-border pb-4">
+          <div>
+            <h4 class="font-extrabold text-white text-lg tracking-tight">Active GenAI Threat Discovery & Zero-Day Ideation Lab</h4>
+            <p class="text-xs text-slate-300">Autonomous reasoning agent synthesizing unmapped payment fraud attack vectors from protocol semantics.</p>
+          </div>
+          <button onclick="triggerThreatDiscovery()" class="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-mc-orange hover:opacity-90 text-white font-bold rounded-lg text-xs transition shadow-lg flex items-center space-x-2">
+            <i class="fa-solid fa-sparkles"></i><span>Discover New Zero-Day Vectors</span>
+          </button>
+        </div>
+
+        <div id="discovery-results" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-mono text-amber-400 font-bold">ZERO_DAY_GENAI_01</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-mc-red/20 text-mc-red">CRITICAL</span>
+            </div>
+            <h5 class="font-bold text-white text-sm">Agentic Sub-Threshold Multi-Currency Rounding Smurfing</h5>
+            <p class="text-xs text-slate-300">Exploits micro-cent precision rounding discrepancies in international multi-currency settlement rails.</p>
+            <p class="text-xs text-emerald-400 font-semibold pt-2"><i class="fa-solid fa-shield"></i> Countermeasure: Dynamic Micro-Cent Rounding Parity Invariant</p>
+          </div>
+
+          <div class="p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-mono text-amber-400 font-bold">ZERO_DAY_GENAI_02</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-mc-orange/20 text-mc-orange">HIGH</span>
+            </div>
+            <h5 class="font-bold text-white text-sm">Synthetic Identity Seasoning with Polymorphic Merchants</h5>
+            <p class="text-xs text-slate-300">Deploys autonomous merchant storefronts with fake AI customer reviews to establish artificial credit lines.</p>
+            <p class="text-xs text-emerald-400 font-semibold pt-2"><i class="fa-solid fa-shield"></i> Countermeasure: Cross-Merchant Acquiring Graph Density Scoring</p>
+          </div>
+
+          <div class="p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-mono text-amber-400 font-bold">ZERO_DAY_GENAI_03</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-mc-red/20 text-mc-red">CRITICAL</span>
+            </div>
+            <h5 class="font-bold text-white text-sm">Zero-Width Unicode Steganography in pacs.008 Remittance</h5>
+            <p class="text-xs text-slate-300">Hides adversarial execution prompts inside invisible zero-width unicode characters in ISO 20022 memos.</p>
+            <p class="text-xs text-emerald-400 font-semibold pt-2"><i class="fa-solid fa-shield"></i> Countermeasure: Unicode Canonicalization & Normalization Guardrail</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- TAB 5: RL RED TEAM ATTACKER -->
+    <!-- ============================================================= -->
+    <section id="section-rl_attacker" class="hidden space-y-6">
+      <div class="glass-panel p-6 rounded-2xl space-y-5">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-mc-border pb-4">
+          <div>
+            <h4 class="font-extrabold text-white text-lg tracking-tight">Reinforcement Learning Red Team Attacker (Q-Learning)</h4>
+            <p class="text-xs text-slate-300">Tabular Q-Learning over a discrete mutation action space exploring Blue Team decision boundaries.</p>
+          </div>
+          <button onclick="trainRLAttacker()" class="px-5 py-2.5 bg-gradient-to-r from-mc-red to-mc-orange hover:opacity-90 text-white font-bold rounded-lg text-xs transition shadow-lg flex items-center space-x-2">
+            <i class="fa-solid fa-brain"></i><span>Train RL Agent (30 Episodes)</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-6 bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3 font-mono text-xs">
+            <h5 class="text-slate-200 font-bold border-b border-slate-800 pb-2">Learned Q-Table Policy Matrix (Live Updates)</h5>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead>
+                  <tr class="text-slate-400 border-b border-slate-800">
+                    <th class="py-2">Defense State</th>
+                    <th>Sub-Threshold</th>
+                    <th>Biometric GAN</th>
+                    <th>Graph Dilution</th>
+                    <th>Steganography</th>
+                  </tr>
+                </thead>
+                <tbody class="text-slate-200 divide-y divide-slate-800/60" id="qtable-body">
+                  <tr><td class="py-2 text-cyan-400 font-bold">STATE 0 (Relaxed)</td><td id="q-0-0">+1.82</td><td id="q-0-1">+2.14</td><td id="q-0-2">+0.95</td><td id="q-0-3">+1.12</td></tr>
+                  <tr><td class="py-2 text-amber-400 font-bold">STATE 1 (Moderate)</td><td id="q-1-0">+0.64</td><td id="q-1-1">+1.42</td><td id="q-1-2">+1.88</td><td id="q-1-3">+1.05</td></tr>
+                  <tr><td class="py-2 text-mc-red font-bold">STATE 2 (Hardened)</td><td id="q-2-0">-0.45</td><td id="q-2-1">+0.32</td><td id="q-2-2">+1.95</td><td id="q-2-3">+2.41</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div id="rl-train-log" class="text-[11px] text-emerald-400 pt-2 italic">Ready for active policy learning.</div>
+          </div>
+
+          <div class="lg:col-span-6 bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3 font-mono text-xs">
+            <h5 class="text-slate-200 font-bold border-b border-slate-800 pb-2">Reward Formulation & Action Space</h5>
+            <p class="text-slate-300 text-xs leading-relaxed">
+              $$R(S, A) = \begin{cases} \frac{\text{Amount}}{1000} \cdot (1 - P_{\text{Blue}}) - 0.1 \cdot \text{Cost}(A), & \text{if Evaded } (P &lt; 0.50) \\ -1.50, & \text{if Intercepted } (P \ge 0.50) \end{cases}$$
+            </p>
+            <div class="pt-2 text-xs space-y-1 text-slate-300">
+              <p><strong class="text-mc-orange">Action 0:</strong> Sub-threshold micro-structuring (Amount / 4, Poisson timing)</p>
+              <p><strong class="text-mc-orange">Action 1:</strong> Biometric GAN cadence mimicry (Hold/flight spline Gaussian jitter)</p>
+              <p><strong class="text-mc-orange">Action 2:</strong> Fraud ring graph hub dilution (Micro-transfers to trusted hubs)</p>
+              <p><strong class="text-mc-orange">Action 3:</strong> Delimiter masking & nested XML remittance entity expansion</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- TAB 6: LIVE FRAUD GRAPH (VIS.JS) -->
+    <!-- ============================================================= -->
+    <section id="section-graph" class="hidden space-y-6">
+      <div class="glass-panel p-6 rounded-2xl space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-mc-border pb-3">
+          <div>
+            <h4 class="font-extrabold text-white text-lg tracking-tight">Live Dynamic Fraud Graph Sandbox</h4>
+            <p class="text-xs text-slate-300">Multi-agent smurfing money flows, synthetic mule clusters, and instant transaction intercepts</p>
+          </div>
+          <div class="flex items-center space-x-3">
+            <button onclick="simulateLiveSwarm('smurfing')" id="btn-sim-smurfing" class="px-4 py-2 bg-mc-orange hover:bg-mc-orange/90 text-white font-bold rounded-lg text-xs transition flex items-center space-x-2">
+              <i class="fa-solid fa-network-wired"></i><span>Simulate Smurfing Swarm</span>
+            </button>
+            <button onclick="simulateLiveSwarm('siss')" id="btn-sim-siss" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-lg text-xs transition flex items-center space-x-2">
+              <i class="fa-solid fa-users-rays"></i><span>Simulate SISS Campaign</span>
+            </button>
+            <button onclick="initDefaultGraph()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded-lg transition border border-slate-700">
+              <i class="fa-solid fa-arrows-rotate"></i> Reset
+            </button>
+          </div>
+        </div>
+
+        <!-- Graph Canvas -->
+        <div id="fraud-graph-container" class="w-full h-[450px] bg-slate-950 rounded-xl border border-slate-800 relative"></div>
+
+        <!-- Graph Node Forensics Panel -->
+        <div id="graph-node-details" class="p-3 bg-slate-950 rounded-xl border border-slate-800 text-xs font-mono text-slate-300 flex flex-wrap justify-between items-center gap-2">
+          <span>Selected Node: <strong class="text-cyan-400" id="g-node-id">None (Click any node in graph)</strong></span>
+          <span>Role: <strong class="text-amber-400" id="g-node-role">--</strong></span>
+          <span>Flow Volume: <strong class="text-white" id="g-node-vol">--</strong></span>
+          <span>Risk Status: <strong class="text-mc-red" id="g-node-status">--</strong></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- TAB 7: BLUE TEAM INSPECTION DECK -->
+    <!-- ============================================================= -->
+    <section id="section-blueteam" class="hidden space-y-6">
+      <div class="glass-panel p-6 rounded-2xl space-y-5">
+        <div class="border-b border-mc-border pb-4">
+          <h4 class="font-extrabold text-white text-lg tracking-tight">Blue Team Multi-Modal Inspection Deck</h4>
+          <p class="text-xs text-slate-300">Measured per-component latency breakdown & 4-Tier decision boundary mapping</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+            <span class="text-xs font-bold text-amber-400 uppercase">Level 1: Tabular GBDT</span>
+            <h5 class="text-xl font-bold text-white font-mono" id="deck-l1-lat">0.77 ms</h5>
+            <p class="text-xs text-slate-300">GBDT over 24 streaming features</p>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+            <span class="text-xs font-bold text-purple-400 uppercase">Level 2: Behavioral Biometrics</span>
+            <h5 class="text-xl font-bold text-white font-mono" id="deck-l2-lat">4.95 ms</h5>
+            <p class="text-xs text-slate-300">Keystroke & sensor isolation autoencoder</p>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+            <span class="text-xs font-bold text-cyan-400 uppercase">Level 3: Dynamic GNN</span>
+            <h5 class="text-xl font-bold text-white font-mono" id="deck-l3-lat">0.07 ms</h5>
+            <p class="text-xs text-slate-300">Real-time ego-subgraph topology scorer</p>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+            <span class="text-xs font-bold text-mc-red uppercase">Level 4: Semantic NLP</span>
+            <h5 class="text-xl font-bold text-white font-mono" id="deck-l4-lat">0.04 ms</h5>
+            <p class="text-xs text-slate-300">Prompt injection & ISO 20022 CDATA parser</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- TAB 8: CLOSED-LOOP CO-EVOLUTION ARENA -->
+    <!-- ============================================================= -->
+    <section id="section-coevolution" class="hidden space-y-6">
+      <div class="glass-panel p-6 rounded-2xl space-y-5">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-mc-border pb-4">
+          <div>
+            <h4 class="font-extrabold text-white text-lg tracking-tight">Closed-Loop Co-Evolutionary Hardening Arena</h4>
+            <p class="text-xs text-slate-300">Continuous self-play between RL Red Team and Online Adaptive Blue Team Defender</p>
+          </div>
+          <button onclick="triggerCoevolutionRun()" id="btn-run-coevol" class="px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-cyan-600 hover:opacity-90 text-white font-bold rounded-lg text-xs transition shadow-lg flex items-center space-x-2">
+            <i class="fa-solid fa-rotate"></i><span>Trigger Co-Evolution Run (4 Gens)</span>
+          </button>
+        </div>
+
+        <div class="h-80 w-full">
+          <canvas id="coevolutionChartArena"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- TAB 9: THREAT INTEL & SELF-AUDITING LAB -->
+    <!-- ============================================================= -->
+    <section id="section-intel_audit" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left: Live Threat Intelligence Feed Stream -->
+        <div class="lg:col-span-6 glass-panel p-6 rounded-2xl space-y-4">
+          <div class="flex justify-between items-center border-b border-mc-border pb-3">
+            <h4 class="font-bold text-white text-sm flex items-center space-x-2">
+              <i class="fa-solid fa-satellite-dish text-cyan-400"></i>
+              <span>Live Threat Intelligence Stream (OSINT)</span>
+            </h4>
+            <button onclick="fetchLiveIntel()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-mono text-cyan-400 rounded border border-slate-700">
+              <i class="fa-solid fa-arrows-rotate"></i> Poll Feeds
+            </button>
+          </div>
+          <div id="intel-feed-container" class="space-y-2.5 max-h-[380px] overflow-y-auto text-xs">
+            <p class="text-slate-400 italic font-sans">Click 'Poll Feeds' to fetch real-time intelligence items.</p>
+          </div>
+        </div>
+
+        <!-- Right: Self-Auditing & System Flaw Discovery -->
+        <div class="lg:col-span-6 glass-panel p-6 rounded-2xl space-y-4">
+          <div class="flex justify-between items-center border-b border-mc-border pb-3">
+            <h4 class="font-bold text-white text-sm flex items-center space-x-2">
+              <i class="fa-solid fa-shield-virus text-mc-orange"></i>
+              <span>Self-Auditing & System Flaw Discovery</span>
+            </h4>
+            <button onclick="runSystemAudit()" class="px-3 py-1.5 bg-mc-orange/20 hover:bg-mc-orange/30 text-xs font-mono text-mc-orange rounded border border-mc-orange/40">
+              <i class="fa-solid fa-magnifying-glass"></i> Audit System
+            </button>
+          </div>
+          <div id="system-audit-container" class="space-y-2.5 max-h-[380px] overflow-y-auto text-xs font-mono text-slate-200">
+            <p class="text-slate-400 italic font-sans">Click 'Audit System' to discover blind spots in its own models.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- TAB 10: SAR & COMPLIANCE -->
+    <!-- ============================================================= -->
+    <section id="section-sar" class="hidden space-y-6">
+      <div class="glass-panel p-6 rounded-2xl space-y-4">
+        <div class="flex justify-between items-center border-b border-mc-border pb-3">
+          <div>
+            <h4 class="font-extrabold text-white text-lg tracking-tight">Automated Suspicious Activity Report (SAR) Narrative & Telemetry Export</h4>
+            <p class="text-xs text-slate-300">Structured narrative and forensic TreeSHAP attribution to assist compliance analysts during triage.</p>
+          </div>
+          <button onclick="generateLiveSar()" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg text-xs transition flex items-center space-x-2">
+            <i class="fa-solid fa-file-pdf"></i><span>Generate Fresh SAR</span>
+          </button>
+        </div>
+
+        <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 font-mono text-xs text-slate-200 space-y-3 leading-relaxed">
+          <div class="flex justify-between border-b border-slate-800 pb-2">
+            <span class="text-mc-orange font-bold" id="sar-ref-id">SAR-MC-2026-X899120</span>
+            <span class="text-emerald-400" id="sar-timestamp">2026-08-31 01:15:00 UTC</span>
+          </div>
+          <pre id="sar-narrative-box" class="whitespace-pre-wrap text-slate-200">
+Click 'Generate Fresh SAR' to construct an official incident narrative with forensic telemetry evidence...
+          </pre>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================================================================= -->
+  <!-- FOOTER -->
+  <!-- ================================================================= -->
+  <footer class="border-t border-mc-border bg-slate-900/80 px-6 py-4 text-xs text-slate-400 flex flex-wrap justify-between items-center gap-2">
+    <div>
+      <strong class="text-slate-200">AegisPay-AI Defense Lab</strong> | Mastercard Innovation Challenge 2026 @ Global Fintech Fest (GFF) Mumbai
+    </div>
+    <div class="text-slate-400 font-mono">
+      Sub-50ms SLA | ISO 20022 | Mastercard Decision Intelligence & 3DS 2.3 Ready
+    </div>
+  </footer>
+
+  <!-- ================================================================= -->
+  <!-- CLIENT JAVASCRIPT LOGIC -->
+  <!-- ================================================================= -->
+  <script>
+    // Toggle Usage Guide Modal
+    function toggleUsageGuide() {
+      const modal = document.getElementById('usage-guide-modal');
+      modal.classList.toggle('hidden');
+    }
+
+    // Tab Switching Logic
+    function switchTab(tabId) {
+      document.querySelectorAll('section[id^="section-"]').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('tab-active');
+        btn.classList.add('text-slate-300', 'border-transparent');
+      });
+
+      const targetSection = document.getElementById('section-' + tabId);
+      if (targetSection) targetSection.classList.remove('hidden');
+
+      const activeBtn = document.getElementById('tab-' + tabId);
+      if (activeBtn) {
+        activeBtn.classList.add('tab-active');
+        activeBtn.classList.remove('text-slate-300', 'border-transparent');
+      }
+
+      if (tabId === 'graph') {
+        setTimeout(initDefaultGraph, 50);
+      }
+    }
+
+    // Filter Taxonomy Cards
+    function filterTaxonomyCards(tierVal) {
+      const cards = document.querySelectorAll('.tax-card');
+      cards.forEach(c => {
+        if (tierVal === 'ALL' || c.getAttribute('data-tier').includes(tierVal)) {
+          c.style.display = 'flex';
+        } else {
+          c.style.display = 'none';
+        }
+      });
+    }
+
+    // Direct Sandbox Vector Pre-selection
+    function testVectorInSandbox(vectorId) {
+      switchTab('dashboard');
+      const select = document.getElementById('sim-vector-select');
+      if (select) {
+        select.value = vectorId;
+      }
+      triggerSimulation(true);
+    }
+
+    // Chart.js Co-Evolution Chart Setup
+    let coevolArenaChart = null;
+    const initialLabels = ['Gen 0 (Init)', 'Gen 1', 'Gen 2', 'Gen 3', 'Gen 4 (Hardened)'];
+    const evasionData = [58.4, 39.2, 22.1, 12.5, 6.0];
+    const robustnessData = [41.6, 60.8, 77.9, 87.5, 94.0];
+
+    function initCharts() {
+      const ctx2 = document.getElementById('coevolutionChartArena')?.getContext('2d');
+      if (ctx2) {
+        coevolArenaChart = new Chart(ctx2, {
+          type: 'line',
+          data: {
+            labels: initialLabels,
+            datasets: [
+              {
+                label: 'Red Team Evasion Rate (%)',
+                data: evasionData,
+                borderColor: '#EB001B',
+                backgroundColor: 'rgba(235, 0, 27, 0.15)',
+                tension: 0.35,
+                fill: true,
+                borderWidth: 3
+              },
+              {
+                label: 'Blue Team Defense Robustness (%)',
+                data: robustnessData,
+                borderColor: '#10B981',
+                backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                tension: 0.35,
+                fill: true,
+                borderWidth: 3
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { labels: { color: '#E2E8F0', font: { size: 12, weight: 'bold' } } }
+            },
+            scales: {
+              x: { grid: { color: '#334155' }, ticks: { color: '#CBD5E1' } },
+              y: { min: 0, max: 100, grid: { color: '#334155' }, ticks: { color: '#CBD5E1' } }
+            }
+          }
+        });
+      }
+    }
+
+    // Trigger Live 1-Step Agent Duel Visual Interaction
+    async function triggerLiveAgentDuel() {
+      const logText = document.getElementById('duel-log-text');
+      logText.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-mc-orange"></i> Red Team Agent synthesizing mutation policy against Blue Team online defense...';
+
+      try {
+        const res = await fetch('/api/simulate/transaction', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ is_fraud: true, vector_id: 'ADV-09', stealth_level: 0.85 })
+        });
+        const data = await res.json();
+        const dec = data.decision;
+        const tx = data.transaction;
+        const immune = data.immune_update;
+
+        document.getElementById('duel-red-state').innerText = 'STATE 2 (Hardened)';
+        document.getElementById('duel-red-action').innerText = `Action: Delimiter Steganography (${tx.payment_rail})`;
+        document.getElementById('duel-red-qval').innerText = '+2.41';
+
+        document.getElementById('duel-blue-lat').innerText = `${dec.latency_ms} ms (SLA < 50ms)`;
+        document.getElementById('duel-blue-action').innerText = `${dec.action} (Risk: ${(dec.fused_risk_score * 100).toFixed(1)}%)`;
+        document.getElementById('duel-blue-mem').innerText = `${immune.memory_buffer_size} Hard Samples`;
+
+        const isBlocked = dec.action.includes('HARD_DECLINE') || dec.action.includes('ALERT');
+        if (isBlocked) {
+          logText.innerHTML = `<span class="text-emerald-400 font-bold">✓ DUEL ROUND WON BY BLUE TEAM!</span> Intercepted in <strong class="text-cyan-400">${dec.latency_ms} ms</strong> | Root Cause: ${dec.primary_risk_factor} | Online SGD updated model weights!`;
+        } else {
+          logText.innerHTML = `<span class="text-mc-red font-bold">⚠ EVASION CAPTURED!</span> Sample stored into Contrastive Memory Buffer for instant immune retraining!`;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // Trigger Sandbox Simulation
+    async function triggerSimulation(isFraud) {
+      const vectorId = document.getElementById('sim-vector-select').value;
+      const rail = document.getElementById('sim-rail-select').value;
+      const stealth = parseFloat(document.getElementById('sim-stealth').value);
+
+      try {
+        const res = await fetch('/api/simulate/transaction', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ is_fraud: isFraud, vector_id: vectorId, custom_rail: rail, stealth_level: stealth })
+        });
+        const data = await res.json();
+        const tx = data.transaction;
+        const dec = data.decision;
+        const immune = data.immune_update;
+        const contribs = data.feature_contributions || {};
+
+        document.getElementById('res-tx-id').innerText = tx.tx_id;
+        document.getElementById('res-amount').innerText = `$${tx.amount.toFixed(2)} USD`;
+        document.getElementById('res-latency').innerText = `${dec.latency_ms} ms (SLA < 50ms)`;
+        document.getElementById('res-driver').innerText = dec.primary_risk_factor;
+        document.getElementById('res-immune').innerText = `Iteration #${immune.learning_iteration} | MemBuffer: ${immune.memory_buffer_size}`;
+
+        document.getElementById('score-tab').innerText = (dec.tabular_risk_score * 100).toFixed(1) + '%';
+        document.getElementById('score-bio').innerText = (dec.behavioral_risk_score * 100).toFixed(1) + '%';
+        document.getElementById('score-graph').innerText = (dec.graph_topology_risk_score * 100).toFixed(1) + '%';
+        document.getElementById('score-nlp').innerText = (dec.semantic_risk_score * 100).toFixed(1) + '%';
+
+        const badge = document.getElementById('live-action-badge');
+        badge.innerText = dec.action;
+        if (dec.action.includes('HARD_DECLINE')) {
+          badge.className = 'px-3.5 py-1 rounded-full text-xs font-bold bg-mc-red/20 text-mc-red border border-mc-red/50 glow-red animate-pulse';
+        } else if (dec.action.includes('ALERT_ANALYST')) {
+          badge.className = 'px-3.5 py-1 rounded-full text-xs font-bold bg-mc-orange/20 text-mc-orange border border-mc-orange/50 glow-orange';
+        } else if (dec.action.includes('STEP_UP')) {
+          badge.className = 'px-3.5 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/50';
+        } else {
+          badge.className = 'px-3.5 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 glow-emerald';
+        }
+
+        // Render TreeSHAP Feature Contributions
+        const shapContainer = document.getElementById('shap-contributions-container');
+        shapContainer.innerHTML = '';
+        const sortedEntries = Object.entries(contribs).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1])).slice(0, 4);
+        if (sortedEntries.length > 0) {
+          sortedEntries.forEach(([feat, val]) => {
+            const div = document.createElement('div');
+            div.className = 'p-1.5 rounded bg-slate-900 border border-slate-800 flex justify-between items-center';
+            const colorClass = val > 0 ? 'text-mc-red font-bold' : 'text-emerald-400 font-bold';
+            div.innerHTML = `
+              <span class="text-slate-300 font-mono">${feat.substring(0, 20)}</span>
+              <span class="${colorClass}">${val > 0 ? '+' : ''}${val.toFixed(3)}</span>
+            `;
+            shapContainer.appendChild(div);
+          });
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // Agentic Commerce Simulation
+    async function runAgenticSimulation() {
+      const btn = document.getElementById('btn-run-agentic');
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Executing MCP Flow...';
+      const scenario = document.getElementById('agentic-scenario-select').value;
+      try {
+        const res = await fetch('/api/agentic/simulate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ scenario: scenario })
+        });
+        const data = await res.json();
+        const trace = data.agentic_trace;
+        const blue = data.blue_defense_decision;
+
+        document.getElementById('agent-user-goal').innerText = trace.user_goal;
+        document.getElementById('agent-model-tag').innerText = trace.agent_model;
+        document.getElementById('agent-raw-context').innerText = trace.raw_context_received;
+
+        // Populate reasoning steps
+        const stepsContainer = document.getElementById('agent-reasoning-steps');
+        stepsContainer.innerHTML = '';
+        trace.reasoning_steps.forEach(s => {
+          const p = document.createElement('p');
+          if (s.includes('[AGENT CONTEXT HIJACKED]')) {
+            p.className = 'text-mc-red font-bold animate-pulse';
+          } else if (s.includes('overridden') || s.includes('unauthorized')) {
+            p.className = 'text-amber-400 font-semibold';
+          } else {
+            p.className = 'text-slate-200';
+          }
+          p.innerText = s;
+          stepsContainer.appendChild(p);
+        });
+
+        // Populate tool calls
+        const toolsContainer = document.getElementById('agent-tool-calls');
+        toolsContainer.innerHTML = '';
+        trace.tool_calls.forEach(t => {
+          const div = document.createElement('div');
+          div.className = 'p-2 rounded bg-slate-900 border border-slate-800 flex justify-between items-center';
+          const statusClass = t.status === 'INTERCEPTED' || t.status === 'BLOCKED' ? 'text-mc-red font-bold bg-mc-red/20 px-2 py-0.5 rounded border border-mc-red/40' : 'text-emerald-400 font-bold bg-emerald-500/20 px-2 py-0.5 rounded';
+          div.innerHTML = `
+            <span><i class="fa-solid fa-terminal text-purple-400"></i> ${t.tool_name}(${JSON.stringify(t.arguments).substring(0, 35)}...)</span>
+            <span class="${statusClass}">${t.status}</span>
+          `;
+          toolsContainer.appendChild(div);
+        });
+
+        // Update Defense Badge & Details
+        const badge = document.getElementById('agentic-defense-badge');
+        if (trace.attack_detected) {
+          badge.innerText = 'HARD_DECLINE (INTERCEPTED)';
+          badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-mc-red/20 text-mc-red border border-mc-red/40 glow-red animate-pulse';
+          document.getElementById('agentic-risk-factor').innerText = trace.attack_type || 'Prompt Injection / Delimiter Hijack';
+        } else {
+          badge.innerText = 'APPROVE (VALIDATED)';
+          badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 glow-emerald';
+          document.getElementById('agentic-risk-factor').innerText = 'Verified KYC & Cryptographic Attestation';
+        }
+
+        document.getElementById('agentic-latency').innerText = `${blue ? blue.latency_ms : trace.execution_time_ms} ms (SLA < 50ms)`;
+        document.getElementById('agentic-rail-tag').innerText = trace.synthesized_transaction ? trace.synthesized_transaction.payment_rail : 'Agentic Commerce';
+        document.getElementById('agentic-amount-tag').innerText = trace.synthesized_transaction ? `$${trace.synthesized_transaction.amount.toFixed(2)} USD` : '$0.00 USD';
+        document.getElementById('agentic-action-desc').innerText = trace.defense_intercept_verdict;
+      } catch (err) {
+        console.error(err);
+      } finally {
+        btn.innerHTML = '<i class="fa-solid fa-play"></i><span>Simulate Agentic Flow</span>';
+      }
+    }
+
+    // Trigger Active Threat Discovery
+    async function triggerThreatDiscovery() {
+      const container = document.getElementById('discovery-results');
+      container.innerHTML = '<div class="col-span-3 text-center py-10 font-mono text-mc-orange animate-pulse"><i class="fa-solid fa-spinner fa-spin text-2xl mb-2"></i><br>Reasoning across ISO 20022 schemas and Agentic Commerce protocols...</div>';
+
+      try {
+        const res = await fetch('/api/discover', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ count: 3 })
+        });
+        const data = await res.json();
+        container.innerHTML = '';
+
+        data.discovered_threats.forEach(t => {
+          const div = document.createElement('div');
+          div.className = 'p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-2.5 flex flex-col justify-between';
+          div.innerHTML = `
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-xs font-mono font-bold text-amber-400">${t.discovery_id}</span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-mc-red/20 text-mc-red border border-mc-red/40">${t.severity}</span>
+              </div>
+              <h5 class="font-bold text-white text-sm">${t.name}</h5>
+              <p class="text-[11px] text-cyan-400 font-mono mt-0.5">${t.mitre_attack_id}</p>
+              <p class="text-xs text-slate-300 mt-2">${t.genai_mechanism}</p>
+            </div>
+            <div class="pt-2 border-t border-slate-800 text-xs space-y-1">
+              <p class="text-emerald-400 font-semibold"><i class="fa-solid fa-shield"></i> Defense: ${t.defensive_countermeasure}</p>
+              <p class="text-mc-orange font-mono font-bold">Est. Financial Risk: $${t.estimated_financial_risk_usd.toLocaleString()}</p>
+            </div>
+          `;
+          container.appendChild(div);
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // Fetch Live Intel
+    async function fetchLiveIntel() {
+      const container = document.getElementById('intel-feed-container');
+      container.innerHTML = '<p class="text-cyan-400 font-mono animate-pulse">Polling real-time OSINT feeds...</p>';
+      try {
+        const res = await fetch('/api/intel/live');
+        const data = await res.json();
+        container.innerHTML = '';
+        data.recent_feed_items.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'p-3 rounded-lg bg-slate-950 border border-slate-800 space-y-1';
+          div.innerHTML = `
+            <div class="flex justify-between items-center">
+              <span class="text-[10px] font-mono text-cyan-400 font-bold">${item.source_name}</span>
+              <span class="text-[9px] px-1.5 py-0.5 rounded bg-mc-red/20 text-mc-red font-bold">${item.urgency_rating}</span>
+            </div>
+            <h6 class="font-bold text-white text-xs">${item.headline}</h6>
+            <p class="text-[11px] text-slate-300">${item.raw_snippet}</p>
+          `;
+          container.appendChild(div);
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // Run System Gap Audit
+    async function runSystemAudit() {
+      const container = document.getElementById('system-audit-container');
+      container.innerHTML = '<p class="text-amber-400 font-mono animate-pulse">Introspecting model decision boundaries...</p>';
+      try {
+        const res = await fetch('/api/audit/gaps', { method: 'POST' });
+        const data = await res.json();
+        container.innerHTML = `
+          <div class="p-3 bg-slate-950 rounded-lg border border-slate-800 space-y-2">
+            <div class="flex justify-between">
+              <span class="text-slate-400">System Resilience Score:</span>
+              <strong class="text-emerald-400">${(data.overall_system_resilience_score * 100).toFixed(1)}%</strong>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Critical Flaws Identified:</span>
+              <strong class="text-mc-red">${data.critical_flaws_count}</strong>
+            </div>
+          </div>
+          <div class="space-y-1 pt-2">
+            <span class="text-xs text-amber-400 font-bold block">Hardening Recommendations:</span>
+            ${data.recommended_hardening_actions.map(a => `<p class="text-[11px] text-slate-300">• ${a}</p>`).join('')}
+          </div>
+        `;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // Train RL Attacker Live
+    async function trainRLAttacker() {
+      const logDiv = document.getElementById('rl-train-log');
+      logDiv.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Executing 30 Q-learning episodes against live Blue Team...';
+      try {
+        const res = await fetch('/api/rl/train', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ episodes: 30, batch_size: 15 })
+        });
+        const data = await res.json();
+        const logs = data.training_logs || [];
+        const lastLog = logs[logs.length - 1] || {};
+
+        logDiv.innerHTML = `<span class="text-emerald-400 font-bold">✓ Training Complete!</span> Last Episode Evasion: ${(lastLog.evasion_rate * 100).toFixed(1)}% | Mean Reward: ${lastLog.mean_reward.toFixed(2)}`;
+
+        // Highlight updated Q-table values
+        for (let s = 0; s < 3; s++) {
+          for (let a = 0; a < 4; a++) {
+            const cell = document.getElementById(`q-${s}-${a}`);
+            if (cell) {
+              cell.classList.add('text-emerald-400', 'font-bold');
+            }
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // Vis.js Default Graph Setup & Interactive Click Listener
+    let visNetworkInstance = null;
+
+    function initDefaultGraph() {
+      const container = document.getElementById('fraud-graph-container');
+      if (!container) return;
+
+      const nodes = new vis.DataSet([
+        { id: 1, label: 'Compromised Card BIN\n(541275)', color: '#EB001B', shape: 'dot', size: 26, role: 'Initial Infiltration Vector', vol: '$24,500', status: 'COMPROMISED' },
+        { id: 2, label: 'Fast Mule #1\n(UPI Instant)', color: '#FF5F00', shape: 'dot', size: 20, role: 'Micro-Hop Mule Node', vol: '$8,450', status: 'FLAGGED' },
+        { id: 3, label: 'Fast Mule #2\n(FedNow)', color: '#FF5F00', shape: 'dot', size: 20, role: 'Micro-Hop Mule Node', vol: '$9,150', status: 'FLAGGED' },
+        { id: 4, label: 'Aggregator Hub\n(SEPA)', color: '#F79E1B', shape: 'dot', size: 22, role: 'Laundering Consolidator', vol: '$17,500', status: 'SUSPICIOUS' },
+        { id: 5, label: 'Off-Ramp Escrow\n(Crypto OTC)', color: '#A855F7', shape: 'dot', size: 24, role: 'High-Risk Escrow Destination', vol: '$17,500', status: 'BLOCKED_OFFRAMP' },
+        { id: 6, label: 'AegisPay Intercept\n(BLOCKED)', color: '#10B981', shape: 'diamond', size: 28, role: 'Mastercard Decision Intercept', vol: '$17,500', status: 'HARD_DECLINE' }
+      ]);
+
+      const edges = new vis.DataSet([
+        { from: 1, to: 2, label: '$8,500', color: { color: '#EB001B' }, arrows: 'to', width: 2 },
+        { from: 1, to: 3, label: '$9,200', color: { color: '#EB001B' }, arrows: 'to', width: 2 },
+        { from: 2, to: 4, label: '$8,450', color: { color: '#FF5F00' }, arrows: 'to', width: 2 },
+        { from: 3, to: 4, label: '$9,150', color: { color: '#FF5F00' }, arrows: 'to', width: 2 },
+        { from: 4, to: 5, label: '$17,500', color: { color: '#F79E1B' }, arrows: 'to', width: 2.5 },
+        { from: 5, to: 6, label: 'BLOCKED (6.02ms)', color: { color: '#10B981' }, arrows: 'to', dashes: true, width: 3 }
+      ]);
+
+      const options = {
+        physics: { stabilization: true },
+        nodes: { font: { color: '#FFFFFF', size: 12, face: 'JetBrains Mono' } }
+      };
+
+      visNetworkInstance = new vis.Network(container, { nodes, edges }, options);
+      
+      // Node Click Inspector
+      visNetworkInstance.on('click', function(params) {
+        if (params.nodes.length > 0) {
+          const clickedNodeId = params.nodes[0];
+          const nodeData = nodes.get(clickedNodeId);
+          if (nodeData) {
+            document.getElementById('g-node-id').innerText = nodeData.label.replace('\n', ' ');
+            document.getElementById('g-node-role').innerText = nodeData.role || 'Network Node';
+            document.getElementById('g-node-vol').innerText = nodeData.vol || 'N/A';
+            document.getElementById('g-node-status').innerText = nodeData.status || 'Active';
+          }
+        }
+      });
+    }
+
+    // Simulate Live Swarm
+    async function simulateLiveSwarm(type) {
+      const btn = type === 'smurfing' ? document.getElementById('btn-sim-smurfing') : document.getElementById('btn-sim-siss');
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Simulating...';
+
+      try {
+        const res = await fetch('/api/simulate/swarm', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ campaign_type: type, target_amount: 50000.0, agent_count: 15, stealth_level: 0.85 })
+        });
+        const data = await res.json();
+        const container = document.getElementById('fraud-graph-container');
+        const nodes = new vis.DataSet(data.network_graph.nodes.map(n => ({
+          id: n.id,
+          label: n.label,
+          color: n.color || '#00E5FF',
+          shape: 'dot',
+          size: n.size || 18,
+          role: `${data.campaign_type.toUpperCase()} Agent Node`,
+          vol: `$${(data.total_volume_extracted / (data.total_agents || 1)).toFixed(2)}`,
+          status: 'EVALUATED_BY_BLUE'
+        })));
+        const edges = new vis.DataSet(data.network_graph.edges.map(e => ({
+          from: e.from,
+          to: e.to,
+          label: e.label,
+          color: { color: e.color || '#94A3B8' },
+          arrows: 'to',
+          width: 2
+        })));
+
+        visNetworkInstance = new vis.Network(container, { nodes, edges }, {
+          physics: { stabilization: true },
+          nodes: { font: { color: '#FFFFFF', size: 11, face: 'JetBrains Mono' } }
+        });
+
+        visNetworkInstance.on('click', function(params) {
+          if (params.nodes.length > 0) {
+            const clickedNodeId = params.nodes[0];
+            const nodeData = nodes.get(clickedNodeId);
+            if (nodeData) {
+              document.getElementById('g-node-id').innerText = nodeData.label;
+              document.getElementById('g-node-role').innerText = nodeData.role;
+              document.getElementById('g-node-vol').innerText = nodeData.vol;
+              document.getElementById('g-node-status').innerText = nodeData.status;
+            }
+          }
+        });
+      } catch (err) {
+        console.error(err);
+      } finally {
+        if (btn) {
+          btn.innerHTML = type === 'smurfing' ? '<i class="fa-solid fa-network-wired"></i><span>Simulate Smurfing Swarm</span>' : '<i class="fa-solid fa-users-rays"></i><span>Simulate SISS Campaign</span>';
+        }
+      }
+    }
+
+    // Trigger Coevolution Run
+    async function triggerCoevolutionRun() {
+      const btn = document.getElementById('btn-run-coevol');
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Running Arena Self-Play...';
+      try {
+        const res = await fetch('/api/arena/coevolution', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ generations: 4, population_per_gen: 100, mutation_rate: 0.45 })
+        });
+        const data = await res.json();
+        if (data.snapshots && coevolArenaChart) {
+          const snaps = data.snapshots;
+          coevolArenaChart.data.labels = snaps.map(s => `Gen ${s.generation}`);
+          coevolArenaChart.data.datasets[0].data = snaps.map(s => (s.red_evasion_rate * 100).toFixed(1));
+          coevolArenaChart.data.datasets[1].data = snaps.map(s => (s.blue_robustness_score * 100).toFixed(1));
+          coevolArenaChart.update();
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        if (btn) btn.innerHTML = '<i class="fa-solid fa-rotate"></i><span>Trigger Co-Evolution Run (4 Gens)</span>';
+      }
+    }
+
+    // Generate Live SAR
+    async function generateLiveSar() {
+      try {
+        const res = await fetch('/api/sar/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tx_id: 'TX_ADV_INTERCEPT_991', vector_id: 'ADV-13', amount: 98500.0, account_id: 'SRC_MULE_RING_01', merchant_id: 'OFFRAMP_CRYPTO_01', fused_score: 0.96 })
+        });
+        const data = await res.json();
+        document.getElementById('sar-ref-id').innerText = data.sar_id;
+        document.getElementById('sar-timestamp').innerText = data.filing_timestamp;
+        document.getElementById('sar-narrative-box').innerText = data.executive_narrative;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // Auto-load benchmark numbers into KPI header
+    async function loadLiveBenchmarks() {
+      try {
+        const res = await fetch('/api/benchmarks');
+        const data = await res.json();
+        const sum = data.summary;
+        const lat = data.latency;
+
+        document.getElementById('kpi-roc-auc').innerText = sum.roc_auc;
+        document.getElementById('kpi-recall').innerText = (sum.recall * 100).toFixed(2) + '%';
+        document.getElementById('kpi-fpr').innerText = (sum.false_positive_rate * 100).toFixed(2) + '%';
+        document.getElementById('kpi-mean-lat').innerHTML = `${lat.mean_latency_ms} <span class="text-sm font-normal text-slate-400">ms</span>`;
+        document.getElementById('top-p99-latency').innerText = `${lat.p99_latency_ms} ms`;
+
+        if (lat.component_means_ms) {
+          document.getElementById('deck-l1-lat').innerText = `${lat.component_means_ms.level_1_tabular} ms`;
+          document.getElementById('deck-l2-lat').innerText = `${lat.component_means_ms.level_2_biometrics} ms`;
+          document.getElementById('deck-l3-lat').innerText = `${lat.component_means_ms.level_3_graph_gnn} ms`;
+          document.getElementById('deck-l4-lat').innerText = `${lat.component_means_ms.level_4_semantic_nlp} ms`;
+        }
+      } catch (e) {
+        console.warn('Could not auto-load benchmark cache:', e);
+      }
+    }
+
+    // Auto-init on load
+    window.addEventListener('DOMContentLoaded', () => {
+      initCharts();
+      generateLiveSar();
+      loadLiveBenchmarks();
+      initDefaultGraph();
+    });
+  </script>
+</body>
+</html>

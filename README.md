@@ -3,8 +3,8 @@
 [![Mastercard Innovation Challenge](https://img.shields.io/badge/Mastercard_Challenge-GFF_2026_Finalist-EB001B.svg)](https://globalfintechfest.com)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Python Version](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-3776AB.svg?logo=python&logoColor=white)](https://python.org)
-[![Measured Latency](https://img.shields.io/badge/P99_Latency-11.23ms_%28%3C50ms_SLA%29-10B981.svg)]()
-[![ROC-AUC](https://img.shields.io/badge/Measured_ROC--AUC-0.9744-FF5F00.svg)]()
+[![Measured Latency](https://img.shields.io/badge/P99_Latency-4.96ms_%28%3C50ms_SLA%29-10B981.svg)]()
+[![ROC-AUC](https://img.shields.io/badge/Measured_ROC--AUC-0.9762-FF5F00.svg)]()
 [![Taxonomy Matrix](https://img.shields.io/badge/Taxonomy-24_Vectors_%2812_Live_Simulated%29-8B5CF6.svg)]()
 
 > **Submission for the Mastercard Innovation Challenge 2026 @ Global Fintech Fest (GFF 2026), Mumbai**  
@@ -42,7 +42,7 @@ Instead of treating detection as an isolated static model, AegisPay-AI unifies *
 |    |      IDENTIFY & TAXONOMY       |                  |        GENERATE & SIMULATE        |       |
 |    |  - 24 GenAI Attack Vectors     |  Threat Specs    |  - Tabular Q-Learning Attacker    |       |
 |    |  - (12 Live / 12 Documented)   | ---------------> |  - Multi-Agent Fraud Swarm DAGs   |       |
-|    |  - MITRE ATLAS Alignment       |                  |  - Telemetry & Payload Generator  |       |
+|    |  - Threat Framework Alignment       |                  |  - Telemetry & Payload Generator  |       |
 |    +--------------------------------+                  +-----------------+-----------------+       |
 |                                                                          |                         |
 |                                                                          | Synthetic Attacks &     |
@@ -73,15 +73,15 @@ AegisPay-AI is architected around 4 modular pillars designed to operate within M
 
 1. **Threat Taxonomy & Active Discovery Engine (`red_team/taxonomy.py` & `active_discovery.py`)**:
    - **24-Vector Threat Matrix**: Across 6 operational tiers, explicitly differentiating **12 live simulated vectors** from **12 documented extensions**.
-   - **MITRE ATLAS Alignment**: Precise technique mappings (`AML.T0040`, `AML.T0044`, `AML.T0051`, `AML.T0052`, `AML.T0031`, `AML.T0015`).
+   - **Threat Framework Alignment**: Precise technique mappings (`AML.T0040`, `AML.T0044`, `AML.T0051`, `AML.T0052`, `AML.T0031`, `AML.T0015`).
 2. **High-Fidelity Synthetic Generator & Q-Learning Attacker (`red_team/generator.py`, `rl_agent.py`, `multi_agent_simulator.py`)**:
    - Statistical payment distribution calibration (Wasserstein distance $W_1 = 0.0959 < 0.25$, Keystroke hold $p = 0.968$).
    - Real tabular Q-learning agent exploring composite mutation actions (sub-threshold pacing, biometric jitter, graph dilution, delimiter masking, proxy hopping).
 3. **Multi-Modal Blue Team & Adaptive Immune Defender (`blue_team/`)**:
-   - **Level 1**: Streaming Feature Store (0.12ms) + Fast-Path Gradient Boosted Trees (0.77ms).
-   - **Level 2**: Behavioral Biometrics Autoencoder (4.95ms) on keystroke cadence & sensor entropy.
-   - **Level 3**: Dynamic Graph Topology Engine (0.07ms) for mule rings and smurfing chains.
-   - **Level 4**: GenAI Semantic Guardrail (0.04ms) for rich ISO 20022 memos and agentic prompt injections.
+   - **Level 1**: Streaming Feature Store (0.04ms) + Fast-Path Gradient Boosted Trees (0.29ms).
+   - **Level 2**: Behavioral Biometrics Autoencoder (1.72ms) on keystroke cadence & sensor entropy.
+   - **Level 3**: Dynamic Graph Topology Engine (0.02ms) for mule rings and smurfing chains.
+   - **Level 4**: GenAI Semantic Guardrail (0.01ms) for rich ISO 20022 memos and agentic prompt injections.
    - **Continuous Online Adaptive Learning (`adaptive_learner.py`)**: Incremental SGD with Contrastive Memory Buffer and Cost-Sensitive Dynamic Threshold Optimization.
    - **Decision Policy**: Mastercard 4-Tier Decision Matrix (`APPROVE`, `STEP_UP_3DS`, `ALERT_ANALYST`, `HARD_DECLINE`).
    - **Explainability**: Real-Time TreeSHAP feature attribution + Automated SAR forensic export for analyst triage.
@@ -93,7 +93,7 @@ AegisPay-AI is architected around 4 modular pillars designed to operate within M
 
 ## 🎯 Pillar 1: IDENTIFY — Threat Taxonomy (24 Vectors / 6 Tiers)
 
-| Vector ID | Attack Name | Operational Tier | Implementation Status | Target Rails | MITRE ATLAS |
+| Vector ID | Attack Name | Operational Tier | Implementation Status | Target Rails | Threat Framework |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **ADV-01** | Synthetic Identity Seasoning Swarms (SISS) | Tier 1: Identity | **LIVE IN CODE** | Cards / 3DS, Open Banking | `AML.T0040` |
 | **ADV-02** | Algorithmic Credit Bureau Profile Fabrication | Tier 1: Identity | DOCUMENTED | Cards, Open Banking | `AML.T0042` |
@@ -140,15 +140,15 @@ $$R(S, A) = \begin{cases} \frac{\text{Amount}}{1000} \cdot (1 - P_{\text{Blue}}(
                 |
                 v
 +-----------------------------------------------------------+
-| Level 1: Fast-Path Tabular & Velocity Engine (<5ms)       |  -> Measured: 0.77 ms
+| Level 1: Fast-Path Tabular & Velocity Engine (<5ms)       |  -> Measured: 0.29 ms
 +-----------------------------------------------------------+
-| Level 2: Behavioral Biometrics Autoencoder (<8ms)         |  -> Measured: 4.95 ms
+| Level 2: Behavioral Biometrics Autoencoder (<8ms)         |  -> Measured: 1.72 ms
 +-----------------------------------------------------------+
-| Level 3: Dynamic Graph Topology Engine (<12ms)            |  -> Measured: 0.07 ms
+| Level 3: Dynamic Graph Topology Engine (<12ms)            |  -> Measured: 0.02 ms
 +-----------------------------------------------------------+
-| Level 4: GenAI Semantic Guardrail (<15ms)                 |  -> Measured: 0.04 ms
+| Level 4: GenAI Semantic Guardrail (<15ms)                 |  -> Measured: 0.01 ms
 +-----------------------------------------------------------+
-| Total Latency: Mean = 6.02 ms | P95 = 8.68 ms | P99 = 11.23 ms (SLA: <50ms)
+| Total Latency: Mean = 2.06 ms | P95 = 3.12 ms | P99 = 4.96 ms (SLA: <50ms)
 +-----------------------------------------------------------+
 ```
 
@@ -172,14 +172,14 @@ All metrics are loaded directly from actual execution runs (`benchmarks/benchmar
 
 | Evaluation Metric | Measured Value (From Code) | Industry Target / Mastercard SLA | Compliance Status |
 | :--- | :---: | :---: | :---: |
-| **ROC-AUC Score** | **0.9744** | $> 0.9500$ | **EXCEEDED** |
-| **PR-AUC Score** | **0.8218** | $> 0.8000$ | **EXCEEDED** |
-| **F1-Score** | **0.9053** | $> 0.8500$ | **EXCEEDED** |
-| **Recall (Fraud Detection Rate)** | **94.00%** | $> 90.00\%$ | **EXCEEDED** |
-| **False Positive Rate (FPR)** | **3.42%** | $< 5.00\%$ | **EXCEEDED** |
-| **Mean Pipeline Latency** | **6.02 ms** | $< 25.00\text{ ms}$ | **76% FASTER** |
-| **P95 Pipeline Latency** | **8.68 ms** | $< 40.00\text{ ms}$ | **78% FASTER** |
-| **P99 Pipeline Latency** | **11.23 ms** | $< 50.00\text{ ms}$ (SLA Target) | **77% BUFFER** |
+| **ROC-AUC Score** | **0.9762** | $> 0.9500$ | **EXCEEDED** |
+| **PR-AUC Score** | **0.8307** | $> 0.8000$ | **EXCEEDED** |
+| **F1-Score** | **0.8845** | $> 0.8500$ | **EXCEEDED** |
+| **Recall (Fraud Detection Rate)** | **89.33%** (268/300) | $> 90.00\%$ | **MISSED** |
+| **False Positive Rate (FPR)** | **3.17%** (38/1200) | $< 5.00\%$ | **EXCEEDED** |
+| **Mean Pipeline Latency** | **2.06 ms** | $< 25.00\text{ ms}$ | **91% FASTER** |
+| **P95 Pipeline Latency** | **3.12 ms** | $< 40.00\text{ ms}$ | **92% FASTER** |
+| **P99 Pipeline Latency** | **4.96 ms** | $< 50.00\text{ ms}$ (SLA Target) | **90% BUFFER** |
 | **Amount Wasserstein Distance** | **$W_1 = 0.0959$** | $W_1 < 0.25$ | **PASSED** |
 | **Keystroke Hold Gaussian Fit** | **$p = 0.9680$** | $p > 0.01$ | **PASSED** |
 | **Automated Test Suite Coverage** | **15 / 15 Passed** | 100% | **PASSED** |

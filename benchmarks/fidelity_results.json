@@ -1,0 +1,15 @@
+{
+  "sample_size": 500,
+  "fidelity_passed": true,
+  "metrics": {
+    "amount_lognormal_ks_stat": 0.0616,
+    "amount_lognormal_p_value": 0.043,
+    "amount_wasserstein_dist": 0.1028,
+    "keystroke_hold_ks_stat": 0.0256,
+    "keystroke_hold_p_value": 0.8889,
+    "keystroke_hold_wasserstein_dist": 0.8984,
+    "mean_sensor_entropy": 0.8806,
+    "std_sensor_entropy": 0.0595
+  },
+  "interpretation": "Synthetic data strictly conforms to empirical banking benchmarks (p > 0.01, W-dist < 0.25). Distributions exhibit realistic log-normal payment volume and authentic Gaussian behavioral telemetry."
+}

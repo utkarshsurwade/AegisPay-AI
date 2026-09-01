@@ -11,7 +11,7 @@ import json
 import uuid
 from typing import Dict, Any, List, Optional
 from fastapi import FastAPI, Request, HTTPException
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -138,6 +138,13 @@ class SarGenerateRequest(BaseModel):
 
 
 # REST Endpoints
+# Render (and other PaaS health checks) probe HEAD /. FastAPI GET routes
+# do not accept HEAD, which surfaces as a public "Not Found" page.
+@app.head("/")
+async def serve_dashboard_head():
+    return Response(status_code=200)
+
+
 @app.get("/", response_class=HTMLResponse)
 async def serve_dashboard(request: Request):
     return templates.TemplateResponse(
@@ -488,4 +495,5 @@ async def generate_audio(req: GenerateAudioRequest):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    port = int(os.getenv("PORT", "8000"))
+    uvicorn.run(app, host="0.0.0.0", port=port)

@@ -1,3 +1,15 @@
+---
+title: AegisPay-AI
+emoji: 🛡️
+colorFrom: red
+colorTo: blue
+sdk: docker
+app_port: 7860
+pinned: false
+license: apache-2.0
+short_description: Closed-loop GenAI payment fraud defense (GFF 2026)
+---
+
 # AegisPay-AI: Autonomous Closed-Loop Red-Teaming & Adaptive Multi-Modal Defense for Next-Gen Payment Systems
 
 [![Mastercard Innovation Challenge](https://img.shields.io/badge/Mastercard_Challenge-GFF_2026_Finalist-EB001B.svg)](https://globalfintechfest.com)
@@ -23,6 +35,7 @@
 8. [Empirical Benchmark Results & Statistical Validation](#-empirical-benchmark-results--statistical-validation)
 9. [Web Prototype & Interactive Command Center](#-web-prototype--interactive-command-center)
 10. [Repository Structure & Quickstart Guide](#-repository-structure--quickstart-guide)
+11. [Public Demo on Hugging Face Spaces](#-public-demo-on-hugging-face-spaces)
 
 ---
 
@@ -275,6 +288,43 @@ python run_demo.py
 ```
 Open **`http://127.0.0.1:8000`** to experience the full interactive platform!
 
+---
+
+## 🌐 Public Demo on Hugging Face Spaces
+
+The interactive command center is a FastAPI app. The repo includes a `Dockerfile` so judges can open a public URL without installing Python.
+
+### Create the Space
+
+1. Go to [huggingface.co/new-space](https://huggingface.co/new-space).
+2. Name it (e.g. `AegisPay-AI`), set **SDK** to **Docker**, visibility **Public**.
+3. In **Settings → Variables and secrets**, add runtime secrets (never commit `.env`):
+   - `GEMINI_API_KEY` — enables live Gemini reasoning (optional; the app falls back without it)
+   - `NANO_BANANA_API_KEY` — optional image generation; Pollinations is used if unset
+4. Push this repository to the Space (Spaces expect branch `main`):
+
+```bash
+git remote add space https://huggingface.co/spaces/<YOUR_HF_USERNAME>/AegisPay-AI
+git push space HEAD:main
+```
+
+If the Space was created empty, you can also upload via the Hugging Face web UI: `Dockerfile`, `.dockerignore`, `requirements.txt`, `README.md`, and the Python packages (`web_prototype/`, `red_team/`, `blue_team/`, `closed_loop/`, `benchmarks/`, `llm_client.py`).
+
+### What to expect
+
+- First **build** takes several minutes (pip install of numpy / pandas / scikit-learn).
+- First **boot** trains the baseline defender on ~3,500 synthetic samples before the UI is ready. Watch **Logs** until you see `Uvicorn running on http://0.0.0.0:7860`.
+- Disk is ephemeral: LLM / threat-intel caches reset when the Space sleeps or restarts.
+- Free CPU Spaces spin down after inactivity; the next visit waits for a cold start.
+
+Local Docker check (optional):
+
+```bash
+docker build -t aegispay-ai .
+docker run --rm -p 7860:7860 --env-file .env aegispay-ai
+```
+
+Then open `http://127.0.0.1:7860`.
 
 ---
 

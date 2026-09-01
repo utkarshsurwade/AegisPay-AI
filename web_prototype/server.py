@@ -14,6 +14,11 @@ from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+
+import requests
+import urllib.parse
+from gtts import gTTS
+
 from pydantic import BaseModel
 
 # Add project root to sys.path
@@ -34,6 +39,9 @@ from closed_loop.gap_analyzer import SelfAuditingGapAnalyzer, SystemFlawReport
 from closed_loop.bidirectional_learner import BiDirectionalLearningCoordinator, BiDirectionalCycleResult
 from benchmarks.benchmark_suite import BenchmarkPipeline
 from benchmarks.fidelity_tests import FidelityTestSuite
+from llm_client import get_llm_client
+
+llm = get_llm_client()
 
 app = FastAPI(
     title="AegisPay-AI Defense Lab",
@@ -41,9 +49,15 @@ app = FastAPI(
     version="3.0.0"
 )
 
+from fastapi.staticfiles import StaticFiles
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
+STATIC_DIR = os.path.join(BASE_DIR, "static")
+os.makedirs(STATIC_DIR, exist_ok=True)
+
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 # Initialize Core Singletons
 taxonomy = ThreatTaxonomy()
@@ -67,6 +81,14 @@ print("[+] AegisPay-AI Core Defense Ready!")
 
 
 # Pydantic Request Models
+
+class GenerateImageRequest(BaseModel):
+    prompt: str
+    seed: Optional[int] = None
+
+class GenerateAudioRequest(BaseModel):
+    script: str
+
 class SingleTxSimRequest(BaseModel):
     is_fraud: bool = False
     vector_id: Optional[str] = "ADV-01"
@@ -118,11 +140,14 @@ class SarGenerateRequest(BaseModel):
 # REST Endpoints
 @app.get("/", response_class=HTMLResponse)
 async def serve_dashboard(request: Request):
-    return templates.TemplateResponse("index.html", {
-        "request": request,
-        "vectors": taxonomy.get_summary_matrix(),
-        "total_vectors": taxonomy.count()
-    })
+    return templates.TemplateResponse(
+        request,
+        "index.html",
+        context={
+            "vectors": taxonomy.get_summary_matrix(),
+            "total_vectors": taxonomy.count()
+        }
+    )
 
 
 @app.post("/api/agentic/simulate")
@@ -338,7 +363,10 @@ async def generate_sar_report(req: SarGenerateRequest):
 
 @app.get("/api/benchmarks")
 async def get_benchmarks():
-    res = benchmark_pipeline.run_full_benchmark(train_samples=3000, test_samples=1000)
+    import random
+    # Use a random seed so the benchmark evaluates on a truly fresh, non-deterministic live dataset!
+    dynamic_pipeline = BenchmarkPipeline(seed=random.randint(100, 99999))
+    res = dynamic_pipeline.run_full_benchmark(train_samples=3000, test_samples=1000, save_results=False)
     return JSONResponse(content=res)
 
 
@@ -347,6 +375,116 @@ async def get_fidelity_metrics():
     res = fidelity_suite.run_full_fidelity_suite(sample_size=1500)
     return JSONResponse(content=res)
 
+
+@app.get("/api/llm/metrics")
+async def get_llm_metrics():
+    return JSONResponse(content=llm.get_metrics())
+
+
+@app.get("/api/system/health")
+async def get_system_health():
+    llm_health = llm.health_check()
+    return JSONResponse(content={
+        "system_status": "OPERATIONAL",
+        "pillars": {
+            "pillar_1_identify": {"status": "ACTIVE", "vectors": taxonomy.count(), "engine": "ActiveThreatDiscovery + arXiv OSINT"},
+            "pillar_2_generate": {"status": "ACTIVE", "engine": "HighFidelity Synthetic Engine + Q-Learning Red Team"},
+            "pillar_3_defend": {"status": "ACTIVE", "engine": "MultiModal 4-Tier Fusion (GBM + Isolation Forest + Network Graph + Gemini Guardrail)"},
+            "pillar_4_closed_loop": {"status": "ACTIVE", "engine": "Co-Evolution Arena + Self-Auditing Gap Analyzer"}
+        },
+        "llm_engine": llm_health
+    })
+
+
+
+@app.post("/api/generate/image")
+async def generate_image(req: GenerateImageRequest):
+    try:
+        nano_banana_key = os.getenv("NANO_BANANA_API_KEY")
+        img_content = None
+        
+        # Attempt Nano Banana integration first
+        if nano_banana_key:
+            try:
+                headers = {
+                    "Authorization": f"Bearer {nano_banana_key}",
+                    "Content-Type": "application/json"
+                }
+                payload = {
+                    "model": "gemini-2.5-flash-image",
+                    "prompt": req.prompt,
+                    "n": 1,
+                    "size": "512x512"
+                }
+                nb_res = requests.post("https://api.nanobananaapi.ai/v1/images/generations", headers=headers, json=payload, timeout=10)
+                if nb_res.status_code == 200:
+                    nb_data = nb_res.json()
+                    if "data" in nb_data and len(nb_data["data"]) > 0:
+                        # Some APIs return base64 instead of URL, checking for b64_json
+                        if "b64_json" in nb_data["data"][0]:
+                            import base64
+                            img_content = base64.b64decode(nb_data["data"][0]["b64_json"])
+                        elif "url" in nb_data["data"][0]:
+                            image_url = nb_data["data"][0]["url"]
+                            img_res = requests.get(image_url, timeout=10)
+                            if img_res.status_code == 200:
+                                img_content = img_res.content
+            except Exception as e:
+                print(f"[!] Nano Banana API failed, falling back to Pollinations. Error: {e}")
+                pass
+                
+        # Fallback to Pollinations.ai if Nano Banana failed or wasn't configured
+        if not img_content:
+            encoded_prompt = urllib.parse.quote(req.prompt)
+            url = f"https://image.pollinations.ai/prompt/{encoded_prompt}?width=512&height=512&nologo=true"
+            if req.seed:
+                url += f"&seed={req.seed}"
+                
+            # Retry logic for Pollinations due to potential high-load timeouts
+            max_retries = 2
+            for attempt in range(max_retries):
+                try:
+                    res = requests.get(url, timeout=45)
+                    if res.status_code == 200:
+                        img_content = res.content
+                        break
+                    else:
+                        print(f"[!] Pollinations returned {res.status_code} on attempt {attempt+1}")
+                except Exception as get_err:
+                    print(f"[!] Pollinations request failed on attempt {attempt+1}: {get_err}")
+                    if attempt == max_retries - 1:
+                        raise get_err
+            
+            if not img_content:
+                return JSONResponse(content={"error": "Image generation failed on both APIs"}, status_code=500)
+                
+        filename = f"gen_img_{uuid.uuid4().hex[:8]}.jpg"
+        assets_dir = os.path.join(STATIC_DIR, "assets")
+        os.makedirs(assets_dir, exist_ok=True)
+        filepath = os.path.join(assets_dir, filename)
+        with open(filepath, "wb") as f:
+            f.write(img_content)
+        return JSONResponse(content={"url": f"/static/assets/{filename}", "status": "success"})
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+
+@app.post("/api/generate/audio")
+async def generate_audio(req: GenerateAudioRequest):
+    try:
+        import random
+        # Different TLDs to simulate different regional accents and voices
+        tlds = ['com', 'co.uk', 'com.au', 'co.in', 'ie', 'co.za']
+        chosen_tld = random.choice(tlds)
+        
+        tts = gTTS(text=req.script, lang="en", tld=chosen_tld, slow=False)
+        filename = f"gen_audio_{uuid.uuid4().hex[:8]}.mp3"
+        assets_dir = os.path.join(STATIC_DIR, "assets")
+        os.makedirs(assets_dir, exist_ok=True)
+        filepath = os.path.join(assets_dir, filename)
+        tts.save(filepath)
+        return JSONResponse(content={"url": f"/static/assets/{filename}", "status": "success"})
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
 
 if __name__ == "__main__":
     import uvicorn

@@ -1,18 +1,18 @@
 {
-  "benchmark_timestamp": 1788198326.027462,
+  "benchmark_timestamp": 1788219659.598766,
   "summary": {
-    "roc_auc": 0.87,
-    "pr_auc": 0.4891,
-    "f1_score": 0.7045,
-    "precision": 0.5671,
-    "recall": 0.93,
-    "false_positive_rate": 0.1775,
-    "false_negative_rate": 0.07,
+    "roc_auc": 0.9864,
+    "pr_auc": 0.897,
+    "f1_score": 0.9169,
+    "precision": 0.9239,
+    "recall": 0.91,
+    "false_positive_rate": 0.0187,
+    "false_negative_rate": 0.09,
     "confusion_matrix": {
-      "true_positives": 186,
-      "false_positives": 142,
-      "true_negatives": 658,
-      "false_negatives": 14
+      "true_positives": 182,
+      "false_positives": 15,
+      "true_negatives": 785,
+      "false_negatives": 18
     },
     "sample_counts": {
       "train_samples": 3000,
@@ -20,120 +20,120 @@
       "benign_test": 800,
       "fraud_test": 200
     },
-    "training_duration_seconds": 1.16
+    "training_duration_seconds": 0.89
   },
   "latency": {
-    "mean_latency_ms": 2.22,
-    "p50_latency_ms": 1.98,
-    "p90_latency_ms": 3.14,
-    "p95_latency_ms": 3.64,
-    "p99_latency_ms": 4.63,
+    "mean_latency_ms": 1.99,
+    "p50_latency_ms": 1.88,
+    "p90_latency_ms": 2.28,
+    "p95_latency_ms": 2.47,
+    "p99_latency_ms": 3.34,
     "component_means_ms": {
-      "feature_store": 0.09,
-      "level_1_tabular": 0.28,
-      "level_2_biometrics": 1.99,
-      "level_3_graph_gnn": 0.03,
+      "feature_store": 0.02,
+      "level_1_tabular": 0.18,
+      "level_2_biometrics": 1.69,
+      "level_3_graph_gnn": 0.05,
       "level_4_semantic_nlp": 0.01
     },
     "mastercard_sla_target_ms": 50.0,
     "sla_compliant": true
   },
   "vector_breakdown": {
-    "ADV-01": {
-      "total_probes": 14,
-      "detected_count": 12,
-      "detection_rate_pct": 85.71,
-      "mean_fused_risk": 0.6646
-    },
-    "ADV-05": {
-      "total_probes": 12,
-      "detected_count": 12,
+    "ADV-14": {
+      "total_probes": 17,
+      "detected_count": 17,
       "detection_rate_pct": 100.0,
-      "mean_fused_risk": 0.9235
+      "mean_fused_risk": 0.92
     },
-    "ADV-16": {
-      "total_probes": 19,
-      "detected_count": 19,
+    "ADV-09": {
+      "total_probes": 11,
+      "detected_count": 11,
       "detection_rate_pct": 100.0,
       "mean_fused_risk": 0.92
     },
     "ADV-08": {
-      "total_probes": 11,
-      "detected_count": 11,
-      "detection_rate_pct": 100.0,
-      "mean_fused_risk": 0.7579
-    },
-    "ADV-12": {
-      "total_probes": 12,
-      "detected_count": 12,
-      "detection_rate_pct": 100.0,
-      "mean_fused_risk": 0.7219
-    },
-    "ADV-14": {
-      "total_probes": 9,
-      "detected_count": 9,
-      "detection_rate_pct": 100.0,
-      "mean_fused_risk": 0.821
-    },
-    "ADV-10": {
-      "total_probes": 18,
-      "detected_count": 18,
-      "detection_rate_pct": 100.0,
-      "mean_fused_risk": 0.6413
-    },
-    "ADV-07": {
-      "total_probes": 10,
-      "detected_count": 10,
-      "detection_rate_pct": 100.0,
-      "mean_fused_risk": 0.92
-    },
-    "ADV-04": {
-      "total_probes": 12,
-      "detected_count": 12,
-      "detection_rate_pct": 100.0,
-      "mean_fused_risk": 0.7467
-    },
-    "ADV-02": {
-      "total_probes": 13,
-      "detected_count": 1,
-      "detection_rate_pct": 7.69,
-      "mean_fused_risk": 0.5099
-    },
-    "ADV-09": {
-      "total_probes": 6,
-      "detected_count": 6,
-      "detection_rate_pct": 100.0,
-      "mean_fused_risk": 0.6229
-    },
-    "ADV-03": {
-      "total_probes": 18,
-      "detected_count": 18,
-      "detection_rate_pct": 100.0,
-      "mean_fused_risk": 0.7418
-    },
-    "ADV-11": {
-      "total_probes": 9,
-      "detected_count": 9,
-      "detection_rate_pct": 100.0,
-      "mean_fused_risk": 0.7549
-    },
-    "ADV-15": {
-      "total_probes": 13,
-      "detected_count": 13,
-      "detection_rate_pct": 100.0,
-      "mean_fused_risk": 0.7829
-    },
-    "ADV-06": {
       "total_probes": 14,
       "detected_count": 14,
       "detection_rate_pct": 100.0,
-      "mean_fused_risk": 0.8229
+      "mean_fused_risk": 0.6411
     },
     "ADV-13": {
       "total_probes": 10,
       "detected_count": 10,
       "detection_rate_pct": 100.0,
+      "mean_fused_risk": 0.8606
+    },
+    "ADV-03": {
+      "total_probes": 18,
+      "detected_count": 18,
+      "detection_rate_pct": 100.0,
+      "mean_fused_risk": 0.7714
+    },
+    "ADV-02": {
+      "total_probes": 12,
+      "detected_count": 12,
+      "detection_rate_pct": 100.0,
       "mean_fused_risk": 0.92
+    },
+    "ADV-11": {
+      "total_probes": 12,
+      "detected_count": 12,
+      "detection_rate_pct": 100.0,
+      "mean_fused_risk": 0.6476
+    },
+    "ADV-05": {
+      "total_probes": 15,
+      "detected_count": 0,
+      "detection_rate_pct": 0.0,
+      "mean_fused_risk": 0.4772
+    },
+    "ADV-07": {
+      "total_probes": 14,
+      "detected_count": 14,
+      "detection_rate_pct": 100.0,
+      "mean_fused_risk": 0.92
+    },
+    "ADV-12": {
+      "total_probes": 11,
+      "detected_count": 11,
+      "detection_rate_pct": 100.0,
+      "mean_fused_risk": 0.92
+    },
+    "ADV-16": {
+      "total_probes": 15,
+      "detected_count": 15,
+      "detection_rate_pct": 100.0,
+      "mean_fused_risk": 0.6228
+    },
+    "ADV-06": {
+      "total_probes": 12,
+      "detected_count": 12,
+      "detection_rate_pct": 100.0,
+      "mean_fused_risk": 0.6262
+    },
+    "ADV-10": {
+      "total_probes": 9,
+      "detected_count": 9,
+      "detection_rate_pct": 100.0,
+      "mean_fused_risk": 0.92
+    },
+    "ADV-01": {
+      "total_probes": 12,
+      "detected_count": 9,
+      "detection_rate_pct": 75.0,
+      "mean_fused_risk": 0.72
+    },
+    "ADV-15": {
+      "total_probes": 7,
+      "detected_count": 7,
+      "detection_rate_pct": 100.0,
+      "mean_fused_risk": 0.8775
+    },
+    "ADV-04": {
+      "total_probes": 11,
+      "detected_count": 11,
+      "detection_rate_pct": 100.0,
+      "mean_fused_risk": 0.7309
     }
   }
 }

@@ -188,21 +188,93 @@ All metrics are loaded directly from actual execution runs (`benchmarks/benchmar
 
 ## 📦 Repository Structure & Quickstart Guide
 
-### 1. Run Automated Test Suite
+```
+AegisPay-AI/
+├── red_team/                        # Pillar 1 & 2: Threat Taxonomy + Red Team Simulation
+│   ├── taxonomy.py                  # 24-Vector Threat Matrix (6 Tiers)
+│   ├── active_discovery.py          # Active threat discovery engine
+│   ├── generator.py                 # High-fidelity synthetic transaction engine
+│   ├── rl_agent.py                  # Tabular Q-Learning attacker
+│   ├── multi_agent_simulator.py     # Multi-agent fraud swarm DAGs
+│   ├── mutation_engine.py           # Composite mutation action engine
+│   ├── payload_generator.py         # Telemetry & payload generator
+│   ├── agentic_commerce_simulator.py # MCP agentic commerce attack (ADV-09/10)
+│   └── live_threat_intel.py         # Live threat intelligence feed
+│
+├── blue_team/                       # Pillar 3: Multi-Modal Defense & Adaptive Learning
+│   ├── feature_store.py             # Streaming feature store (0.04ms)
+│   ├── tabular_detector.py          # Fast-path gradient boosted trees (0.29ms)
+│   ├── behavioral_detector.py       # Behavioral biometrics autoencoder (1.72ms)
+│   ├── gnn_detector.py              # Dynamic graph topology engine (0.02ms)
+│   ├── semantic_guardrail.py        # GenAI semantic guardrail (0.01ms)
+│   ├── meta_classifier.py           # Multi-modal fusion engine
+│   ├── adaptive_learner.py          # Online adaptive streaming SGD
+│   └── explainability.py            # Real-time TreeSHAP + SAR export
+│
+├── closed_loop/                     # Pillar 4: Closed-Loop Co-Evolution Arena
+│   ├── arena.py                     # Red vs Blue mutual adversarial learning
+│   ├── bidirectional_learner.py     # Bidirectional policy co-evolution
+│   ├── gap_analyzer.py              # Self-auditing gap discovery
+│   └── metrics_tracker.py           # Co-evolution metrics tracking
+│
+├── benchmarks/                      # Empirical Validation & Statistical Tests
+│   ├── benchmark_suite.py           # Full benchmark pipeline
+│   ├── fidelity_tests.py            # KS tests & Wasserstein distance validation
+│   ├── benchmark_results.json       # Measured benchmark results
+│   └── fidelity_results.json        # Verified fidelity test results
+│
+├── web_prototype/                   # Interactive Web Dashboard
+│   ├── server.py                    # FastAPI server (Threat Taxonomy, Attack Studio, etc.)
+│   └── templates/                   # Jinja2 HTML templates
+│
+├── run_demo.py                      # 1-Click demo launcher (tests + docs + web server)
+├── test_suite.py                    # Automated test suite (15 tests)
+├── generate_submission_doc.py       # Solution walkthrough .docx generator
+├── requirements.txt                 # Python dependencies
+├── .python-version                  # Python version pin (3.11)
+└── README.md
+```
+
+### Prerequisites
+
+- **Python 3.11** (recommended). Compatible with 3.10–3.12.
+
+### Setup & Installation
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/SaahilTamboli/AegisPay-AI.git
+cd AegisPay-AI
+
+# 2. Create a virtual environment with Python 3.11
+python3.11 -m venv .venv
+
+# 3. Activate the virtual environment
+source .venv/bin/activate        # macOS / Linux
+# .venv\Scripts\activate         # Windows
+
+# 4. Install dependencies
+pip install -r requirements.txt
+```
+
+### Running the Project
+
+#### Run Automated Test Suite
 ```bash
 python test_suite.py
 ```
 
-### 2. Generate Verified Solution Walkthrough (.docx)
+#### Generate Verified Solution Walkthrough (.docx)
 ```bash
 python generate_submission_doc.py
 ```
 
-### 3. Launch Working Web Prototype
+#### Launch Working Web Prototype
 ```bash
 python run_demo.py
 ```
 Open **`http://127.0.0.1:8000`** to experience the full interactive platform!
+
 
 ---
 

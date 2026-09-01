@@ -214,7 +214,7 @@ class RealTimeFeatureStore:
             biometric_liveness_score=float(tx.biometric_liveness_score),
             account_in_degree=in_deg,
             account_out_degree=out_deg,
-            merchant_risk_score=0.15,
+            merchant_risk_score=float(np.clip(mcc_risk * (1.0 + min(2.0, in_deg / 50.0)), 0.01, 0.95)),
             memo_length=memo_len,
             has_injection_tokens=has_inj,
         )

@@ -9,3 +9,5 @@ venv/
 ~$*.docx
 .DS_Store
 Thumbs.db
+.env
+cache/

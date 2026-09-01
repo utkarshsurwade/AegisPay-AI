@@ -1,7 +1,7 @@
 """
 AegisPay-AI: Explainability Engine & Automated SAR Generator (Pillar 3 - DEFEND)
 Generates real-time SHAP feature attribution and FinCEN/Mastercard-compliant
-Suspicious Activity Report (SAR) narratives for compliance officers and fraud analysts.
+Suspicious Activity Report (SAR) narratives using Gemini 2.0 Flash with SHA256 caching.
 """
 import time
 import uuid
@@ -10,6 +10,7 @@ from typing import Dict, Any, List, Optional
 
 from red_team.generator import TransactionRecord
 from .meta_classifier import DetectionDecision
+from llm_client import get_llm_client
 
 
 @dataclass
@@ -53,8 +54,8 @@ class ExplainabilityEngine:
         vector_name = vector_metadata.get("name", "Anomalous Multi-Modal Fraud Activity") if vector_metadata else "Anomalous Activity"
         threat_id = vector_metadata.get("threat_framework_id", vector_metadata.get("mitre_attack_id", "N/A")) if vector_metadata else "N/A"
 
-        # Construct legal & forensic narrative
-        narrative = (
+        # Default standard template
+        default_narrative = (
             f"SUSPICIOUS ACTIVITY REPORT (SAR) - NARRATIVE SUMMARY\n"
             f"Filing Reference: {sar_id} | Intercept Timestamp: {filing_time}\n\n"
             f"1. INCIDENT OVERVIEW:\n"
@@ -81,6 +82,32 @@ class ExplainabilityEngine:
             f"- Dynamic honeypot monitoring deployed to capture further adversarial probe vectors."
         )
 
+        # Enhance with Gemini LLM compliance narrative synthesis
+        llm = get_llm_client()
+        prompt = f"""Draft an executive Suspicious Activity Report (SAR) narrative for financial crime compliance officers:
+Transaction ID: {tx.tx_id}
+Amount: ${tx.amount:,.2f} USD
+Rail: {tx.payment_rail}
+Account: {tx.account_id}
+Merchant: {tx.merchant_id} ({tx.merchant_category})
+Fused Risk Score: {decision.fused_risk_score:.4f}
+Decision Action: {decision.action.value}
+Threat Vector: {vector_name} [{threat_id}]
+Primary Risk Factor: {decision.primary_risk_factor}
+Contributing Signals: {', '.join(decision.contributing_signals or ['None'])}
+Remittance Memo: "{tx.remittance_memo}"
+
+Provide a structured, legally sound 4-section SAR narrative (1. Incident Overview, 2. Risk Attribution, 3. Forensic Evidence, 4. Enforcement Action)."""
+
+        res = llm.generate(
+            prompt=prompt,
+            system_instruction="You are a Mastercard Chief Compliance & Anti-Money Laundering (AML) officer writing official SAR filings.",
+            max_output_tokens=600,
+            fallback_fn=lambda: default_narrative
+        )
+
+        final_narrative = res.get("text") or default_narrative
+
         compliance_flags = [
             "FinCEN Form 111 (Suspicious Activity Report) Required",
             "PCI-DSS v4.0 Section 10.4 Automated Anomaly Alert",
@@ -95,9 +122,11 @@ class ExplainabilityEngine:
             "distance_km": tx.distance_km,
             "biometric_liveness": tx.biometric_liveness_score,
             "sensor_entropy": tx.sensor_entropy,
-            "subgraph_out_degree": decision.graph_topology_risk_score,
+            "graph_risk": decision.graph_topology_risk_score,
+            "semantic_risk": decision.semantic_risk_score,
             "contributing_signals": decision.contributing_signals,
             "rule_overrides": decision.rule_overrides,
+            "narrative_source": res.get("source", "TEMPLATE")
         }
 
         return SuspiciousActivityReport(
@@ -112,7 +141,7 @@ class ExplainabilityEngine:
             fused_risk_score=decision.fused_risk_score,
             identified_threat_vector=vector_name,
             threat_framework_id=threat_id,
-            executive_narrative=narrative,
+            executive_narrative=final_narrative,
             telemetry_forensics=forensics,
             regulatory_compliance_flags=compliance_flags
         )

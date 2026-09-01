@@ -1,15 +1,17 @@
 """
 AegisPay-AI: Active GenAI Threat Discovery & Ideation Engine (Pillar 1 - IDENTIFY)
-Autonomously searches, reasons across payment rail specifications, protocol semantics,
-and agentic workflows to discover novel, emerging zero-day GenAI payment fraud vectors.
+Uses LLM-driven adversarial ideation to reason across payment rail specs, protocol semantics,
+and autonomous agent workflows (MCP, A2A) to uncover zero-day payment fraud vectors.
 """
 import uuid
 import time
 import random
-from dataclasses import dataclass, asdict, field
+import json
+from dataclasses import dataclass, asdict
 from typing import List, Dict, Any, Optional
 
 from .taxonomy import AttackVector, AttackTier, PaymentRail, SeverityLevel
+from llm_client import get_llm_client
 
 
 @dataclass
@@ -49,20 +51,10 @@ class ActiveThreatDiscoveryEngine:
         {"rail": PaymentRail.OPEN_BANKING, "protocols": ["PSD3 / FDX APIs", "OAuth 2.1 Rich Authorization Requests (RAR)", "Consent Expiration", "Account Information Services (AIS)"]},
     ]
 
-    GENAI_EXPLOITATION_PRIMITIVES = [
-        "Adversarial Indirect Prompt Injection via Metadata Steganography",
-        "Autonomous Micro-Transaction Seasoning Swarms with Human Cadence GAN",
-        "Multi-Modal Biometric Diffusion Spoofing in Hardware Camera Buffers",
-        "Black-Box Boundary Reconstruction via Differential Latency Canary Probes",
-        "Polymorphic Remittance Payload Synthesis inducing XML/JSON Parsing Race Conditions",
-        "Reinforcement Learning-Guided Distributed Smurfing Directed Acyclic Graphs",
-        "Conversational Voice Clone Impersonation during Push-Payment Authorization",
-        "Synthetic Identity Infiltration via Algorithmic Credit Bureaus Seasoning",
-    ]
-
     def __init__(self, seed: int = 2026):
         self.rng = random.Random(seed)
         self.discovery_archive: List[DiscoveredThreatVector] = []
+        self.llm = get_llm_client()
 
     def discover_novel_attack_vectors(
         self,
@@ -72,58 +64,76 @@ class ActiveThreatDiscoveryEngine:
     ) -> List[DiscoveredThreatVector]:
         """
         Executes active exploration across rail combinations and generative primitives
-        to formulate new zero-day attack vectors.
+        to formulate new zero-day attack vectors using Gemini reasoning.
         """
         discovered = []
 
         for _ in range(count):
-            # Select target rail component
             if rail_focus:
                 rail_meta = next((r for r in self.PAYMENT_RAIL_COMPONENTS if r["rail"].value == rail_focus), self.rng.choice(self.PAYMENT_RAIL_COMPONENTS))
             else:
                 rail_meta = self.rng.choice(self.PAYMENT_RAIL_COMPONENTS)
 
             protocol = self.rng.choice(rail_meta["protocols"])
-            genai_primitive = self.rng.choice(self.GENAI_EXPLOITATION_PRIMITIVES)
             novelty = round(self.rng.uniform(min_novelty, 0.98), 3)
-
             discovery_id = f"ZERO_DAY_GENAI_{uuid.uuid4().hex[:6].upper()}"
-            threat_name = f"Autonomous {genai_primitive.split()[0]} on {protocol}"
 
-            # Formulate threat specifics
-            mechanism = (
-                f"Adversary orchestrates a continuous GenAI agent pipeline utilizing {genai_primitive.lower()} "
-                f"targeting the {protocol} interface within {rail_meta['rail'].value}. "
-                f"The attack leverages automated model feedback to dynamically adjust perturbation parameters."
+            # Fallback formulation generator
+            def fallback_hypothesis():
+                return {
+                    "name": f"Autonomous Zero-Day Exploit on {protocol}",
+                    "genai_mechanism": f"Multi-agent adversarial system utilizes generative prompt synthesis and sub-threshold timing jitter targeting the {protocol} interface.",
+                    "vulnerability_exploited": f"Semantic validation gaps and lack of cryptographic tool-use binding in {protocol} handlers.",
+                    "evasion_hypothesis": "Distributes execution queries across 40+ residential proxy nodes and injects human circadian latency.",
+                    "defensive_countermeasure": "Multi-modal cross-rail invariant validation with real-time semantic token sandboxing.",
+                    "severity": "CRITICAL" if novelty > 0.88 else "HIGH",
+                    "estimated_risk_usd": round(self.rng.uniform(250000, 1200000), 2)
+                }
+
+            prompt = f"""You are a Principal AI Security Researcher for Mastercard Cyber Defense.
+Invent a novel, plausible, highly technical zero-day attack vector on this payment protocol:
+Target Rail: {rail_meta['rail'].value}
+Protocol / Interface: {protocol}
+
+Return a JSON object with:
+1. "name" (Catchy technical threat name, e.g. "Steganographic MCP Token Injection")
+2. "genai_mechanism" (2-3 sentences explaining how GenAI / LLMs / Agents execute this attack)
+3. "vulnerability_exploited" (1-2 sentences on the architectural flaw in the payment rail)
+4. "evasion_hypothesis" (How the attacker bypasses legacy rules & fraud detectors)
+5. "defensive_countermeasure" (How Mastercard AegisPay-AI should intercept it)
+6. "severity" ("CRITICAL" or "HIGH")
+7. "estimated_risk_usd" (Number between 150000 and 1500000)"""
+
+            res = self.llm.generate(
+                prompt=prompt,
+                system_instruction="You are Mastercard AegisPay-AI Autonomous Threat Discovery Engine. Formulate novel attack hypotheses against emerging financial payment rails.",
+                max_output_tokens=450,
+                response_json=True,
+                fallback_fn=fallback_hypothesis
             )
 
-            vuln = f"Semantic ambiguity and lack of multi-modal invariant checks in {protocol} handlers."
-            evasion = f"Distributes query volume across 50+ residential ASNs and injects realistic Gaussian human latency."
-            defense = f"Multi-modal cross-rail invariant gating with real-time semantic token sandboxing and GNN graph flow analysis."
-
-            payload_tpl = {
-                "vector_type": "ZERO_DAY_DISCOVERED",
-                "target_protocol": protocol,
-                "exploit_primitive": genai_primitive,
-                "simulated_stealth_index": novelty,
-                "sample_payload_signature": f"ADV_SIG_{uuid.uuid4().hex[:12].upper()}"
-            }
+            data = res.get("json") or fallback_hypothesis()
 
             threat = DiscoveredThreatVector(
                 discovery_id=discovery_id,
                 timestamp=time.time(),
-                name=threat_name,
+                name=data.get("name", f"Autonomous Exploit on {protocol}"),
                 target_rails=[rail_meta["rail"].value],
                 attack_tier="Tier 3: Agentic Commerce & Rail Exploits",
-                severity="CRITICAL" if novelty > 0.88 else "HIGH",
+                severity=data.get("severity", "HIGH"),
                 threat_framework_id=f"AML.T00{self.rng.randint(55, 99)} (Autonomous Rail Synthesis)",
                 novelty_score=novelty,
-                genai_mechanism=mechanism,
-                vulnerability_exploited=vuln,
-                synthetic_payload_template=payload_tpl,
-                evasion_hypothesis=evasion,
-                defensive_countermeasure=defense,
-                estimated_financial_risk_usd=round(self.rng.uniform(150000, 1200000), 2)
+                genai_mechanism=data.get("genai_mechanism", ""),
+                vulnerability_exploited=data.get("vulnerability_exploited", ""),
+                synthetic_payload_template={
+                    "vector_type": "ZERO_DAY_DISCOVERED",
+                    "target_protocol": protocol,
+                    "novelty_score": novelty,
+                    "source": res.get("source", "GEMINI")
+                },
+                evasion_hypothesis=data.get("evasion_hypothesis", ""),
+                defensive_countermeasure=data.get("defensive_countermeasure", ""),
+                estimated_financial_risk_usd=float(data.get("estimated_risk_usd", 450000.0))
             )
 
             discovered.append(threat)
@@ -135,7 +145,6 @@ class ActiveThreatDiscoveryEngine:
         """
         Converts an actively discovered threat into a standard registered AttackVector in the taxonomy.
         """
-        # Map target rail
         mapped_rails = [PaymentRail.AGENTIC_COMMERCE, PaymentRail.ISO20022]
         return AttackVector(
             id=threat.discovery_id,

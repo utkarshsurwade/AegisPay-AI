@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+</head>
+<body>
+  <div id="mynetwork" style="width: 400px; height: 400px; border: 1px solid lightgray;"></div>
+  <script>
+    var container = document.getElementById('mynetwork');
+    var nodes = new vis.DataSet([{id: 1, label: 'Node 1'}, {id: 2, label: 'Node 2'}]);
+    var edges = new vis.DataSet([{from: 1, to: 2}]);
+    var network = new vis.Network(container, {nodes: nodes, edges: edges}, {});
+    
+    setTimeout(() => {
+        // Create again on the same container
+        var nodes2 = new vis.DataSet([{id: 3, label: 'Node 3'}, {id: 4, label: 'Node 4'}]);
+        var edges2 = new vis.DataSet([{from: 3, to: 4}]);
+        network = new vis.Network(container, {nodes: nodes2, edges: edges2}, {});
+    }, 1000);
+  </script>
+</body>
+</html>

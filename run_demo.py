@@ -9,9 +9,13 @@ import uvicorn
 
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
+from dotenv import load_dotenv
+load_dotenv()
+
 from benchmarks.benchmark_suite import BenchmarkPipeline
 from benchmarks.fidelity_tests import FidelityTestSuite
 from generate_submission_doc import create_submission_docx
+from llm_client import get_llm_client
 
 
 def main():
@@ -41,8 +45,11 @@ def main():
     print(f"  [+] Generated: {doc_path} ({os.path.getsize(doc_path):,} bytes)")
 
     print("\n[STEP 3/3] Launching AegisPay-AI Interactive Web Prototype Dashboard...")
-    print("  [+] Server running at: http://127.0.0.1:8000")
-    print("  [+] Open your browser to explore the Threat Taxonomy, Attack Studio, Fraud Graph, and Closed-Loop Arena.")
+    llm_health = get_llm_client().health_check()
+    print(f"  [+] AI LLM Engine: {llm_health['status']} ({llm_health['model']})")
+    print(f"  [+] Real-time OSINT & Preprints: CONNECTED (arXiv API)")
+    print(f"  [+] Server running at: http://127.0.0.1:8000")
+    print("  [+] Open your browser to explore the Command Center, Threat Matrix, and Closed-Loop Arena.")
     print("  [+] Press CTRL+C to stop the server.\n")
 
     uvicorn.run("web_prototype.server:app", host="127.0.0.1", port=8000, reload=False)

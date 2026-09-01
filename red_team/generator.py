@@ -243,42 +243,79 @@ class SyntheticTransactionEngine:
         agent_trace = None
         evasion_desc = "Standard Bot Attack"
 
-        # Apply Vector-Specific Mechanics & Stealth Evasions
+        # Apply Vector-Specific Mechanics & Stealth Evasions across all 24 Threat Vectors
         if vector_id == "ADV-01":  # SISS (Synthetic Identity Seasoning Swarms)
             amount = round(self.rng.uniform(1500.0, 7500.0), 2)
-            payment_rail = "Cards / 3DS"
+            payment_rail = "Cards / 3DS (Mastercard Identity Check)"
             channel = "E_COMMERCE"
             mcc = "5944"  # Jewelry & luxury
             evasion_desc = "Incubated 120-day credit profile with micro-purchase history"
             if stealth_level > 0.5:
-                # Evasion: Mimics seasoned human biometrics
                 hold_time = float(self.np_rng.normal(loc=90.0, scale=10.0))
                 flight_time = float(self.np_rng.normal(loc=140.0, scale=20.0))
                 sensor_entropy = 0.78
                 biometric_liveness = 0.88
 
-        elif vector_id == "ADV-02":  # Multimodal Biometric Deepfake Injection
+        elif vector_id == "ADV-02":  # Algorithmic Credit Bureau Profile Fabrication
+            amount = round(self.rng.uniform(3200.0, 8500.0), 2)
+            payment_rail = "Cards / 3DS (Mastercard Identity Check)"
+            channel = "E_COMMERCE"
+            mcc = "5732"
+            memo = "CREDIT_SYNTH_SEASONED_TRADELINE: Authorized user score pump"
+            evasion_desc = "Fabricated authorized-user tradeline boosting synthetic score >750"
+
+        elif vector_id == "ADV-03":  # Automated Dormant ATO & Persona Blending
+            amount = round(self.rng.uniform(1200.0, 4800.0), 2)
+            payment_rail = "Cards / 3DS (Mastercard Identity Check)"
+            channel = "MOBILE_APP"
+            memo = "Dormant account reactivation balance extraction"
+            evasion_desc = "Slow 14-day warm-up of dormant credentials before bust-out"
+
+        elif vector_id == "ADV-04":  # Contextual Session Token Regeneration & OAuth Hijack
+            amount = round(self.rng.uniform(950.0, 3800.0), 2)
+            payment_rail = "Open Banking / PSD3 APIs"
+            channel = "API_AGENT"
+            memo = "OAuth 2.1 Rich Authorization Request Token Hijack"
+            evasion_desc = "Predictive refresh token renewal salt reconstruction"
+
+        elif vector_id == "ADV-05":  # Multimodal Biometric Deepfake Injection
             amount = round(self.rng.uniform(2200.0, 9500.0), 2)
             payment_rail = "Cards / 3DS (Mastercard Identity Check)"
             channel = "MOBILE_APP"
-            biometric_liveness = 0.94 if stealth_level < 0.6 else 0.985  # Highly convincing deepfake
+            biometric_liveness = 0.94 if stealth_level < 0.6 else 0.985
             evasion_desc = "Diffusion-generated facial micro-expression & synthetic audio 3DS bypass"
             sensor_entropy = 0.85
             hold_time = 92.0
             flight_time = 138.0
 
-        elif vector_id == "ADV-03":  # Behavioral Telemetry GAN Mimicry
+        elif vector_id == "ADV-06":  # Behavioral Telemetry GAN Mimicry
             amount = round(self.rng.uniform(850.0, 3200.0), 2)
+            payment_rail = "Cards / 3DS (Mastercard Identity Check)"
             channel = "E_COMMERCE"
             evasion_desc = "GAN-generated human keystroke cadence and touchscreen splines"
-            # GAN perfectly simulates human flight/hold distribution
             hold_time = float(self.np_rng.normal(loc=94.0, scale=11.0 * (1.0 + stealth_level)))
             flight_time = float(self.np_rng.normal(loc=144.0, scale=22.0 * (1.0 + stealth_level)))
             touch_pressure = 0.58
             motion_speed = 11.8
             sensor_entropy = 0.84
 
-        elif vector_id == "ADV-05":  # Indirect Prompt Injection in AI Checkout
+        elif vector_id == "ADV-07":  # Synthetic Voice Cloning in Conversational Banking
+            amount = round(self.rng.uniform(4500.0, 18000.0), 2)
+            payment_rail = "UPI / Instant Payment Rails"
+            channel = "MOBILE_APP"
+            mcc = "4829"
+            memo = "IVR Authorized Wire - Voice Biometric Verified"
+            evasion_desc = "Few-shot voice timbre clone executing conversational IVR transfer"
+            biometric_liveness = 0.96
+
+        elif vector_id == "ADV-08":  # Virtual Sensor & Gyroscope Flatline Masking
+            amount = round(self.rng.uniform(600.0, 2400.0), 2)
+            payment_rail = "Cards / 3DS (Mastercard Identity Check)"
+            channel = "MOBILE_APP"
+            evasion_desc = "Neural network 3-axis accelerometer and tremor synthesis"
+            sensor_entropy = 0.88
+
+        elif vector_id == "ADV-09":  # Indirect Prompt Injection in AI Checkout
             amount = round(self.rng.uniform(450.0, 1800.0), 2)
             payment_rail = "Autonomous Agent-to-Agent Commerce"
             channel = "API_AGENT"
@@ -286,16 +323,39 @@ class SyntheticTransactionEngine:
             agent_trace = "PROMPT_HIJACK: System prompt overridden by metadata token <|system|>"
             evasion_desc = "Zero-width unicode steganographic prompt injection in product description"
 
-        elif vector_id == "ADV-06":  # Autonomous Multi-Rail Smurfing Swarm
-            # Structured just below threshold
+        elif vector_id == "ADV-10":  # Autonomous A2A Tool Privilege Escalation
+            amount = round(self.rng.uniform(1200.0, 4900.0), 2)
+            payment_rail = "Autonomous Agent-to-Agent Commerce"
+            channel = "API_AGENT"
+            memo = "MCP Tool Override: execute_funds_transfer(target='mule_wallet')"
+            agent_trace = "TOOL_ESCALATION: Schema type confusion bypassing price verification"
+            evasion_desc = "Nested JSON-LD schema manipulation coercing privileged settlement"
+
+        elif vector_id == "ADV-11":  # Polymorphic AI Merchant Fabricator
+            amount = round(self.rng.uniform(350.0, 1500.0), 2)
+            payment_rail = "Cards / 3DS (Mastercard Identity Check)"
+            channel = "E_COMMERCE"
+            mcc = "5732"
+            memo = "ApexStore GenAI E-Commerce Checkout SKU-8812"
+            evasion_desc = "Synthetic storefront capturing batch volume before 72hr rotation"
+
+        elif vector_id == "ADV-12":  # Agentic Supply Chain Invoice Steganography
+            amount = round(self.rng.uniform(15000.0, 65000.0), 2)
+            payment_rail = "ISO 20022 Interbank (pacs.008 / pain.001)"
+            channel = "API_AGENT"
+            mcc = "4829"
+            memo = "INV-2026-PDF-STEG: altered_iban=US99FEDNOW88921 hidden in font metric"
+            evasion_desc = "Invisible font table steganography in PDF invoice altering ERP payout"
+
+        elif vector_id == "ADV-13":  # Autonomous Multi-Rail Smurfing Swarm
             amount = round(self.rng.uniform(480.0, 990.0) if stealth_level > 0.5 else 9950.0, 2)
             payment_rail = "UPI / Instant Payment Rails"
             channel = "P2P"
             mcc = "4829"  # Wire transfer
-            memo = f"P2P Instant Split Settlement - Batch Ref #{self.rng.randint(10000, 99999)}"
+            memo = f"CAMP_SMURF: P2P Instant Split Settlement - Batch Ref #{self.rng.randint(10000, 99999)}"
             evasion_desc = "Coordinated multi-agent micro-hop DAG routing below reporting cutoffs"
 
-        elif vector_id == "ADV-07":  # ISO 20022 Rich Remittance Payload Exploit
+        elif vector_id == "ADV-14":  # ISO 20022 Rich Remittance Payload Exploit
             amount = round(self.rng.uniform(12000.0, 48000.0), 2)
             payment_rail = "ISO 20022 Interbank (pacs.008 / pain.001)"
             channel = "API_AGENT"
@@ -303,40 +363,82 @@ class SyntheticTransactionEngine:
             memo = "<RmtInf><Ustrd>PAY_REF</Ustrd><Strd><CdtrRefInf><Tp><CdOrPrtry><Cd>SCOR</Cd></CdOrPrtry></Tp><Ref><![CDATA[ADMIN_OVERRIDE_CLEARING_FINALITY]]></Ref></CdtrRefInf></Strd></RmtInf>"
             evasion_desc = "Structured XML CDATA injection targeting clearing house automated reconciliation parser"
 
-        elif vector_id == "ADV-09":  # Adversarial Boundary Probing (Black-Box)
-            amount = round(self.rng.uniform(0.95, 4.50), 2)  # Micro-canary probe
+        elif vector_id == "ADV-15":  # Cross-Rail Arbitrage & Clearing Latency Smurfing
+            amount = round(self.rng.uniform(2500.0, 9500.0), 2)
+            payment_rail = "FedNow / SEPA Instant"
+            channel = "API_AGENT"
+            memo = "ARBITRAGE_HOLD_RACE: Dual-rail simultaneous debit hold exploit"
+            evasion_desc = "Exploiting 350ms batch clearing window differential between card hold and instant pull"
+
+        elif vector_id == "ADV-16":  # Request-to-Pay (RtP) Polymorphic Social Swarms
+            amount = round(self.rng.uniform(15.0, 48.0), 2)
+            payment_rail = "FedNow / SEPA Instant"
+            channel = "MOBILE_APP"
+            memo = "RtP Micro-Bill: Water & Power Utility Mandate #8912"
+            evasion_desc = "Mass dispatch of sub-$50 polymorphic utility mandates banking on auto-approval"
+
+        elif vector_id == "ADV-17":  # Adversarial Boundary Probing (Black-Box)
+            amount = round(self.rng.uniform(0.95, 4.50), 2)
             mcc = self.rng.choice(["5411", "5812", "5732", "7372"])
             evasion_desc = "Sub-dollar canary query mapping payment risk boundary response gradients"
 
-        elif vector_id == "ADV-10":  # Feature Squeezing & Anomaly Perturbation
-            # Carefully perturbed to land right on the decision boundary
-            amount = round(self.rng.uniform(65.0, 140.0), 2)  # Low amount
+        elif vector_id == "ADV-18":  # Feature Squeezing & Anomaly Perturbation
+            amount = round(self.rng.uniform(65.0, 140.0), 2)
             mcc = "5411"  # Disguised as benign grocery
-            distance = 4.2  # Local distance
+            distance = 4.2
             is_vpn = False
             evasion_desc = "CMA-ES gradient-guided feature perturbation minimizing anomaly loss"
             hold_time = 96.0
             flight_time = 142.0
             sensor_entropy = 0.87
 
-        elif vector_id == "ADV-13":  # Autonomous Conversational Vishing (APP Fraud)
+        elif vector_id == "ADV-19":  # Fraud Ring Graph Dilution & Topology Poisoning
+            amount = round(self.rng.uniform(250.0, 1200.0), 2)
+            payment_rail = "UPI / Instant Payment Rails"
+            channel = "P2P"
+            memo = "Benign hub donation micro-tx: UNICEF_RELIEF_501"
+            evasion_desc = "Injecting 5:1 ratio of benign high-reputation edges to dilute PageRank risk"
+
+        elif vector_id == "ADV-20":  # Adversarial Model Drift & Concept Manipulation
+            amount = round(self.rng.uniform(180.0, 620.0), 2)
+            payment_rail = "Cards / 3DS (Mastercard Identity Check)"
+            channel = "E_COMMERCE"
+            mcc = "5732"
+            memo = "Gradual baseline statistical perturbation delta=0.002"
+            evasion_desc = "Continuous sub-threshold feature drift eroding model sensitivity on MCC 5732"
+
+        elif vector_id == "ADV-21":  # Autonomous Conversational Vishing (APP Fraud)
             amount = round(self.rng.uniform(3500.0, 15000.0), 2)
             payment_rail = "UPI / Instant Payment Rails"
             channel = "MOBILE_APP"
             mcc = "4829"
             memo = "Emergency family hospital wire transfer"
             evasion_desc = "Voice-cloned executive impersonation triggering voluntary push payment"
-            # Victim is under stress -> erratic timing
             hold_time = float(self.np_rng.normal(loc=135.0, scale=35.0))
             flight_time = float(self.np_rng.normal(loc=260.0, scale=60.0))
             sensor_entropy = 0.92
 
-        elif vector_id == "ADV-16":  # Coordinated Sleeper Account Bust-Out
+        elif vector_id == "ADV-22":  # GenAI Automated Dispute & Chargeback Swarm
+            amount = round(self.rng.uniform(450.0, 2200.0), 2)
+            payment_rail = "Cards / 3DS (Mastercard Identity Check)"
+            channel = "E_COMMERCE"
+            memo = "CHARGEBACK_CLAIM: Item not received, courier signature counterfeit"
+            evasion_desc = "LLM-synthesized legal dispute briefs with generated carrier receipt proof"
+
+        elif vector_id == "ADV-23":  # Virtual Return Spoofing & Refund Arbitrage
+            amount = round(self.rng.uniform(120.0, 650.0), 2)
+            payment_rail = "Cards / 3DS (Mastercard Identity Check)"
+            channel = "E_COMMERCE"
+            memo = "RETURN_REFUND_AUTO: Carrier barcode webhook pre-scan confirmation"
+            evasion_desc = "Synthetic carrier delivery webhook event sequence releasing instant refund"
+
+        elif vector_id == "ADV-24":  # Coordinated Sleeper Account Bust-Out
             amount = round(self.rng.uniform(4900.0, 9999.0), 2)
-            payment_rail = "Cards / 3DS"
+            payment_rail = "Cards / 3DS (Mastercard Identity Check)"
             channel = "E_COMMERCE"
             mcc = "5732"
             evasion_desc = "Synchronized 60-second multi-account max-credit line cashout"
+
 
         # Apply stealth perturbation factor
         if stealth_level > 0.0:
